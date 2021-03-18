@@ -3,11 +3,14 @@ from Pelaaja import Player
 class Pelikentta():
 
     def __init__(self):
-        self.pakka = Korttipakka()  #sekoitettu korttipakka pituus 52
+        self.pakka = Korttipakka()  #sekoitetun korttipakka pituus 52
         self.pelaajaa_lista = []
         self.turn = 0 #kenen vuoro
         self.poyta = []
         self.x=0 #on nolla jos pakassa on vielä kortteja
+
+    def get_poyta(self):
+        return self.poyta
 
     def lisaa_pelaaja(self, nimi):
         self.pelaajaa_lista.append(Player(nimi))

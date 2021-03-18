@@ -1,6 +1,6 @@
 #Käyttöliittymä
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QInputDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QInputDialog, QListWidgetItem, QListWidget
 from pelikentta import Pelikentta
 from Pelaaja import Player
 from Qui_card import Qui_card
@@ -11,6 +11,7 @@ class GUI_aloitus(QMainWindow):
         self.setCentralWidget(QtWidgets.QWidget())
         self.init_window()
         self.peli = Pelikentta()
+
 
 
     def get_player_amount(self):
@@ -53,6 +54,16 @@ class GUI_aloitus(QMainWindow):
                 pass
         # Pelaajat lisätty 2-8PLR, jaetaan kortit
         self.peli.aloita_peli()
+        #luo pöytä ja esitä kortit:
+        self.board()
+    def board(self):
+
+        for kortti in self.peli.get_poyta(): #luodaan Qui_card olio
+            card = Qui_card(kortti)
+            print(kortti.get_arvo())
+            self.list.addItem(QListWidgetItem(card))
+
+        self.listview.show()
 
     def save_game(self):
         pass
@@ -100,6 +111,14 @@ class GUI_aloitus(QMainWindow):
         self.setWindowTitle("Kasino")
         self.init_buttons()
         self.show()
+
+        self.list = QListWidget()
+
+
+        self.listview = QtWidgets.QListView(self.list)
+        self.listview.adjustSize()
+        self.listview.show()
+
 
     def load_game(self):
         pass

@@ -3,8 +3,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QInputDialog
 from pelikentta import Pelikentta
 from Pelaaja import Player
-from Qui_add_player import Qui_addplayer
-
+from Qui_card import Qui_card
 class GUI_aloitus(QMainWindow):
 
     def __init__(self):
@@ -15,7 +14,6 @@ class GUI_aloitus(QMainWindow):
 
 
     def get_player_amount(self):
-
         while 1:
             count, ok = QInputDialog.getText(self, "Amount of players (2-8)", "Enter amount:")
             try:
@@ -59,6 +57,8 @@ class GUI_aloitus(QMainWindow):
     def save_game(self):
         pass
 
+    def ubdate_board(self):
+        pass
 
 
 

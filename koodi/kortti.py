@@ -16,4 +16,5 @@ class Kortti():
     def get_maa(self):
         return self._maa
 
-    maa = property(get_maa)
+    def get_arvo(self):
+        return self.arvo

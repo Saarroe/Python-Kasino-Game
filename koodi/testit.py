@@ -2,6 +2,7 @@ import unittest
 from pelikentta import Pelikentta
 from korttipakka import Korttipakka
 from Pelaaja import Player
+from kortti import Kortti
 class Test(unittest.TestCase):
 
     def test_alustus(self):
@@ -28,6 +29,11 @@ class Test(unittest.TestCase):
         self.assertEqual(4,len(matti.kasi))
         self.assertEqual(5, len(uusi.poyta))
         self.assertEqual(43, len(uusi.pakka.kortit))
+    def test_kortti(self):
+        uusi = Kortti("Ruutu", 2)
+        self.assertEqual("Ruutu", uusi.get_maa())
+        sanakirja = {"Ruutu": 'D', "Hertta": 'H', "Risti": 'C', "Pata": 'S'}
+
 
 if __name__ == "__main__":
     unittest.main()

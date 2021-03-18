@@ -5,3 +5,7 @@ class Qui_card():
     def __init__(self, card):
         super(Qui_card, self).__init__()
         self.card = card
+        self.init_card()
+
+    def init_card(self):
+        self.pixelmap

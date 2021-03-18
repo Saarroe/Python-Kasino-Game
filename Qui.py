@@ -2,64 +2,90 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QInputDialog
 from pelikentta import Pelikentta
+from Pelaaja import Player
 from Qui_add_player import Qui_addplayer
-import sys
+
 class GUI_aloitus(QMainWindow):
 
     def __init__(self):
         super().__init__()
         self.setCentralWidget(QtWidgets.QWidget())
         self.init_window()
+        self.peli = Pelikentta()
 
 
     def get_player_amount(self):
+
         while 1:
             count, ok = QInputDialog.getText(self, "Amount of players (2-8)", "Enter amount:")
             try:
                 count = int(count)
-                break
+                if count < 2 or count >8:
+                    pass
+                else:
+                    return count
             except ValueError:
-                pass
-        return count
-    def start(self):
-        # New game, how many players
-        #count= self.get_player_amount()
-        print("ok")
+                count, ok = QInputDialog.getText(self, "Wrong Amount of players (2-8)", "Enter new amount:")
 
 
     def newplayer(self):
-        text, ok = QInputDialog.getText(self, "Add new player",
-                                        'Enter players name:')
+        ok = False
+        while ok == False:
 
-        if ok:
-            self.le.setText(str(text))
+            text, ok = QInputDialog.getText(self, "Add new player",
+                                            'Enter players name:')
+            if len(self.peli.return_pelaajat()) > 0:
+                for pelaaja in self.peli.return_pelaajat():
+                    if str(text) == pelaaja.return_name():
+                        return False
+            if ok == True:
+                self.peli.lisaa_pelaaja(str(text))
+                return True
 
-    def end(self):
-        self.close()
 
-    def adjust(self,widget):
-        widget.adjustSize()
+    def start(self):
+        # New game, how many players
+        count = self.get_player_amount()
+        x=0
+        while x < count:
+            ok = self.newplayer()
+            if ok == True:
+                x+=1
+            else:
+                pass
+        # Pelaajat lisätty 2-8PLR, jaetaan kortit
+        self.peli.aloita_peli()
+
+    def save_game(self):
+        pass
+
+
 
 
     def init_buttons(self):
 
         self.start_button = QPushButton("Start new game")
-        self.start_button.clicked.connect(self.start())
-        self.adjust(self.start_button)
+        self.start_button.clicked.connect(lambda: self.start())
+        self.start_button.adjustSize
         self.start_button.setStyleSheet("color: black; background: grey")
         self.horizontal.addWidget(self.start_button)
 
         self.load_button = QPushButton("Load game", self)
         self.load_button.setStyleSheet("color: black; background: grey")
-       # self.load_button.clicked.connect(self.load_game())
-        self.adjust(self.load_button)
-
+        self.load_button.clicked.connect(lambda: self.load_game())
+        self.load_button.adjustSize()
         self.horizontal.addWidget(self.load_button)
+
+        self.save_button = QPushButton("Save game", self)
+        self.save_button.setStyleSheet("color: black; background: grey")
+        self.save_button.clicked.connect(lambda: self.save_game())
+        self.save_button.adjustSize()
+        self.horizontal.addWidget(self.save_button)
 
         self.end_button = QPushButton("End game", self)
         self.end_button.setStyleSheet("color: black; background: grey")
-        self.end_button.clicked.connect(self.end)
-        self.adjust(self.end_button)
+        self.end_button.clicked.connect(self.close)
+        self.end_button.adjustSize()
         self.horizontal.addWidget(self.end_button)
 
 
@@ -75,8 +101,8 @@ class GUI_aloitus(QMainWindow):
         self.init_buttons()
         self.show()
 
-
     def load_game(self):
         pass
+
 
 

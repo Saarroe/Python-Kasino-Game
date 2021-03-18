@@ -28,3 +28,5 @@ class Player():
         kortti=self.kasi[i]
         self.kasi.remove(kortti)
         return kortti
+    def return_name(self):
+        return self.nimi

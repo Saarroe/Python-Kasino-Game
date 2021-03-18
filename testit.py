@@ -13,6 +13,9 @@ class Test(unittest.TestCase):
         uusi.lisaa_pelaaja("matti")
         uusi.aloita_peli()
         matti = uusi.get_turn_pelaaja()
+        self.assertEqual(1, len(uusi.return_pelaajat()))
+        nimi = uusi.pelaajaa_lista[0].nimi
+        self.assertEqual("matti", nimi)
         self.assertEqual(44, len(uusi.pakka.kortit))
         self.assertEqual(4, len(uusi.poyta))
         self.assertEqual(4, len(matti.kasi))

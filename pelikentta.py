@@ -17,6 +17,7 @@ class Pelikentta():
 
     def return_pelaajat(self):
         return self.pelaajaa_lista
+
     def get_turn_pelaaja(self):
         return self.pelaajaa_lista[self.turn]
     def otakortti_poydasta(self,i):

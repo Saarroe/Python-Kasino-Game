@@ -4,6 +4,7 @@ from korttipakka import Korttipakka
 from Pelaaja import Player
 from kortti import Kortti
 from Qui_card import Qui_card
+from Qui import GUI_aloitus
 class Test(unittest.TestCase):
 
     def test_alustus(self):
@@ -34,7 +35,11 @@ class Test(unittest.TestCase):
         uusi = Kortti("Ruutu", 2)
         self.assertEqual("Ruutu", uusi.get_maa())
         sanakirja = {"Ruutu": 'D', "Hertta": 'H', "Risti": 'C', "Pata": 'S'}
-        Qui_card(uusi)
+
+    def test_errorit_kayttoliittyma(self):
+        qui = GUI_aloitus()
+        qui.newplayer()
+
 
 
 if __name__ == "__main__":

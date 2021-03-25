@@ -4,7 +4,7 @@ from pelikentta import Pelikentta
 from Pelaaja import Player
 from Qui_card import Qui_card
 
-class Qui_board(QWidget):
+class Qui_board(QListWidget):
 
     def __init__(self):
         super(Qui_board, self).__init__()

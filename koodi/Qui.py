@@ -125,13 +125,19 @@ class GUI_aloitus(QMainWindow):
         self.setWindowTitle("Kasino")
         self.init_buttons()
         self.show()
-        self.boardlist = Qui_board()
 
-        self.boardlist.setStyleSheet("{background-image: url(board.jpg);}")
-        self.grid = QtWidgets.QGridLayout()
-        self.grid.addWidget(self.boardlist)
+        #Ongelmia saada luotua Qboardlist
 
-       # self.view = QtWidgets.QListView(self.boardlist)
+        #self.boardlist = QListWidget()#Qui_board()
+        #self.boardlist.setStyleSheet("self.boardlist, {background-image: url(board.jpg);}")
+        #self.grid = QtWidgets.QGridLayout()
+        #self.grid.addWidget(self.boardlist)
+        #self.horizontal2 = QtWidgets.QHBoxLayout()
+        #self.horizontal2.addWidget((self.boardlist))
+
+        #self.view = QtWidgets.QListView(self.boardlist)
+        #self.view.setStyleSheet("{background-image: url(board.jpg);}")
+        #self.view.show()
        # self.view.adjustSize()
       #  self.view.show()
       #  self.centralWidget().

@@ -12,6 +12,9 @@ class Pelikentta():
     def get_poyta(self):
         return self.poyta
 
+    def get_vuoro(self):
+        return self.turn
+
     def lisaa_pelaaja(self, nimi):
         self.pelaajaa_lista.append(Player(nimi))
 

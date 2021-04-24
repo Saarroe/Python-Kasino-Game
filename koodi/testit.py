@@ -22,7 +22,7 @@ class Test(unittest.TestCase):
         self.assertEqual(44, len(uusi.pakka.kortit))
         self.assertEqual(4, len(uusi.poyta))
         self.assertEqual(4, len(matti.kasi))
-    def test_pelaa_kortti_poytaan(self):
+    def test_pelaa_kortti_poytaan(self): #aloita_peli funktion testaus
         uusi = Pelikentta()
         uusi.lisaa_pelaaja("matti")
         uusi.aloita_peli()

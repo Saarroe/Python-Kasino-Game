@@ -19,6 +19,7 @@ class Kortti():
 
     def get_arvo(self):
         return self.arvo
+
     def set_visibility(self,boolean): #joko true tai false
         self.visibility = boolean
     def get_visibility(self):

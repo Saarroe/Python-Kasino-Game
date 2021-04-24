@@ -4,7 +4,7 @@ from pelikentta import Pelikentta
 from Pelaaja import Player
 from kortti import Kortti
 from Qui_card import Qui_card
-from Qui_korttiabstract import Qui_kortti
+
 class Qui_board(QWidget):
 
     def __init__(self):

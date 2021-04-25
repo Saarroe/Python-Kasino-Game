@@ -8,7 +8,44 @@ class Pelikentta():
         self.turn = 0 #kenen vuoro
         self.poyta = []
         self.x=0 #on nolla jos pakassa on vielä kortteja
+        self.qkortit_kasi = []
+        self.klikattukasi = []  #klikatut kortit
+        self.klikattupoyta = []
 
+    def lisaaklikattukasi(self, kortti):  #klikatut kortit pöydästä ja kädestä
+        self.klikattukasi.append(kortti)
+
+    def lisaaklikattupoyta(self, kortti):
+        self.klikattupoyta.append(kortti)
+
+    def poistaklikattukasi(self,kortti):
+        if kortti in self.klikattukasi():
+            self.klikattukasi.remove(kortti)
+        else:
+            print("Debuggaus klik kasi")
+    def poistaklikattupoyta(self,kortti):
+        if kortti in self.klikattupoyta():
+            self.klikattupoyta.remove(kortti)
+        else:
+            print("Debuggaus klik poyta")
+
+    def returnklikattukasi(self):
+        return self.klikattukasi
+
+    def returnklikattupoyta(self):
+        return self.klikattupoyta
+
+    def lisaaqkortti(self,kortti):
+        self.qkortit_kasi.append(kortti)
+
+    def poistaqkortti(self,kortti):
+        if kortti in self.qkortit_kasi:
+            self.qkortit_kasi.remove(kortti)
+        else:
+            print("debuggaus poista qkortti kasi")
+
+    def getqkortit_kasi(self):
+        return self.qkortit_kasi
     def get_poyta(self):
         return self.poyta
 
@@ -78,3 +115,10 @@ class Pelikentta():
         halutut.append(self.poyta[1])
         kortti = pelaaja.pelaa_kortti(1)
 
+    def klikkaus(self,qkortti):
+        if qkortti.returnpaikka() == True:  #True jos kortti pöydässä, kädessä False
+            self.lisaaklikattupoyta(qkortti)
+            print("poyta")
+        else:
+            self.lisaaklikattukasi(qkortti)
+            print("kasi")

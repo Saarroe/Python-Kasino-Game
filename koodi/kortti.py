@@ -10,6 +10,9 @@ class Kortti():
         self.arvo = arvo
         self.visibility = False
 
+
+
+
     def set_maa(self, maa):
         if maa in [Kortti.Ruutu, Kortti.Pata, Kortti.Risti, Kortti.Hertta]:
             self._maa = maa

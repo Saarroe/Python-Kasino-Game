@@ -26,6 +26,10 @@ class GUI_aloitus(QMainWindow):
         self.fileMenu = menubar.addMenu('&Lopeta')
         self.fileMenu.addAction(self.exitAct)
 
+        self.timer = QtCore.QTimer()  #jotta ei tarvitse päivittää käyttöliittymää manuaalisesti
+        #self.timer.timeout.connect(lambda: self.updatescene())
+        self.timer.start(15)
+
 
     def get_player_amount(self):
         while 1:
@@ -89,14 +93,7 @@ class GUI_aloitus(QMainWindow):
         self.view.adjustSize()
         self.view.show()
         self.vbox.addWidget(self.view)
-        #self.vbox.addStretch(0)
 
-       #self.scene2 = QtWidgets.QGraphicsScene()
-        #self.scene2.setSceneRect(500,500,200,200)
-        #self.view2 = QtWidgets.QGraphicsView(self.scene, self)
-        #self.view2.adjustSize()
-        #self.view2.show()
-        #self.vbox.addWidget(self.view2)
 
         self.newbuttons()  #pelin napit: seuraava vuoro, nayta kortit, talenna
 
@@ -124,12 +121,12 @@ class GUI_aloitus(QMainWindow):
 
     def showcards(self):  #avaa käden kortit
         x = 0
-        pelaaja = self.peli.get_turn_pelaaja()
-        for kortti in pelaaja.get_kasi():
-            self.kortti1 = Qui_card(kortti)
-            self.kortti1.avaakortti()
-            self.scene.addWidget(self.kortti1)
-            self.kortti1.move(-25+150*x,475)
+       # pelaaja = self.peli.get_turn_pelaaja()
+        kortit=self.peli.getqkortit_kasi()
+        for kortti in kortit:
+            kortti.avaakortti()
+            self.scene.addWidget(kortti)
+            kortti.move(-25+150*x,475)
             x += 1
 
 
@@ -139,10 +136,10 @@ class GUI_aloitus(QMainWindow):
 
 
         poytakortit = self.peli.get_poyta()
-
         x=0
         for kortti in poytakortit:
-            self.kortti1 = Qui_card(kortti)
+            self.kortti1 = Qui_card(kortti, self.peli)
+            self.kortti1.setTrue()
             self.kortti1.avaakortti()
             self.scene.addWidget(self.kortti1)
             self.kortti1.move(-200+150*x,75)
@@ -150,7 +147,9 @@ class GUI_aloitus(QMainWindow):
         pelaaja = self.peli.get_turn_pelaaja()
         x=0
         for kortti in pelaaja.get_kasi():
-            self.kortti1 = Qui_card(kortti)
+            self.kortti1 = Qui_card(kortti, self.peli)
+            self.kortti1.setFalse()
+            self.peli.lisaaqkortti(self.kortti1)
             self.scene.addWidget(self.kortti1)
             self.kortti1.move(-25+150*x,475)
             x+=1

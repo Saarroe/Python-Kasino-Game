@@ -17,7 +17,7 @@ class Korttipakka():
             for arvo in range(2, 15):
                 kortti = Kortti(maat[maa], arvo)
                 self.kortit.append(kortti)
-        #sekoita
+        #sekoita kortit
         self.sekoita()
 
     def nosta_kortti(self):

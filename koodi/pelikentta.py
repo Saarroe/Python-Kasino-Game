@@ -9,8 +9,12 @@ class Pelikentta():
         self.poyta = []
         self.x=0 #on nolla jos pakassa on vielä kortteja
         self.qkortit_kasi = []
+        self.qkortit_poyta = []
         self.klikattukasi = []  #klikatut kortit
         self.klikattupoyta = []
+
+
+
 
     def lisaaklikattukasi(self, kortti):  #klikatut kortit pöydästä ja kädestä
         self.klikattukasi.append(kortti)
@@ -23,6 +27,7 @@ class Pelikentta():
             self.klikattukasi.remove(kortti)
         else:
             print("Debuggaus klik kasi")
+
     def poistaklikattupoyta(self,kortti):
         if kortti in self.klikattupoyta():
             self.klikattupoyta.remove(kortti)
@@ -46,6 +51,7 @@ class Pelikentta():
 
     def getqkortit_kasi(self):
         return self.qkortit_kasi
+
     def get_poyta(self):
         return self.poyta
 
@@ -63,11 +69,13 @@ class Pelikentta():
 
     def get_turn_pelaaja(self):
         return self.pelaajaa_lista[self.turn]
+
     def otakortti_poydasta(self,i):
         if i < len(self.poyta):
             kortti = self.poyta[i]
             self.poyta.remove(kortti)
             return kortti
+
     def get_pakka(self):
         return self.pakka
 
@@ -77,7 +85,7 @@ class Pelikentta():
                 kortti = self.pakka.nosta_kortti()
                 pelaaja.lisaa_kortti_kateen(kortti)
                 pelaaja.nollaa_mokit()
-        for i in range(0,4):
+        #for i in range(0,4):
             kortti = self.pakka.nosta_kortti()
             self.lisaa_kortti_poytaan(kortti)
 

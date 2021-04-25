@@ -6,8 +6,9 @@ class Player():
         self.nimi = nimi
         self.kasi = []
         self.pisteet = 0
-        self.saadut_kortit = []
+        self.saadut_kortit = 0
         self.mokit = 0
+        self.padat = 0
 
     def lisaa_kortti_kateen(self, kortti):
         self.kasi.append(kortti)

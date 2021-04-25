@@ -18,6 +18,7 @@ class Qui_card(QLabel):
         self.kuva()
         self.paikka = None# True jos pöytä, false niin kädessä
         self.peli = peli
+
     def setTrue(self):
         self.paikka=True
 

@@ -27,8 +27,8 @@ class GUI_aloitus(QMainWindow):
         self.fileMenu.addAction(self.exitAct)
 
         self.timer = QtCore.QTimer()  #jotta ei tarvitse päivittää käyttöliittymää manuaalisesti
-        #self.timer.timeout.connect(lambda: self.updatescene())
-        self.timer.start(15)
+        self.timer.timeout.connect(lambda: self.updatequi())
+        self.timer.start(100)
 
 
     def get_player_amount(self):
@@ -130,31 +130,40 @@ class GUI_aloitus(QMainWindow):
             x += 1
 
 
-
-
     def updatequi(self):
 
-
         poytakortit = self.peli.get_poyta()
-        x=0
-        for kortti in poytakortit:
-            self.kortti1 = Qui_card(kortti, self.peli)
-            self.kortti1.setTrue()
-            self.kortti1.avaakortti()
-            self.scene.addWidget(self.kortti1)
-            self.kortti1.move(-200+150*x,75)
-            x+=1
-        pelaaja = self.peli.get_turn_pelaaja()
-        x=0
-        for kortti in pelaaja.get_kasi():
-            self.kortti1 = Qui_card(kortti, self.peli)
-            self.kortti1.setFalse()
-            self.peli.lisaaqkortti(self.kortti1)
-            self.scene.addWidget(self.kortti1)
-            self.kortti1.move(-25+150*x,475)
-            x+=1
-        self.view.show()
-        self.statusBar().showMessage("Pelaajan {} vuoro".format(pelaaja.return_name()))
+        klikatutpoyta = self.peli.returnklikattupoyta()
+        klikatutkasi = self.peli.returnklikattukasi()
+        if len(poytakortit) == 0:
+            pass
+        else:
+            x=0
+            for kortti in poytakortit:
+                if kortti in klikatutpoyta:
+                    print("edistys")
+                else:
+                    self.kortti1 = Qui_card(kortti, self.peli)
+                    self.kortti1.setTrue()
+                    self.kortti1.avaakortti()
+                    self.scene.addWidget(self.kortti1)
+                    self.kortti1.move(-200+150*x,75)
+                x+=1
+
+            pelaaja = self.peli.get_turn_pelaaja()
+            x=0
+            for kortti in pelaaja.get_kasi():
+                if kortti in klikatutkasi:
+                    pass
+                else:
+                    self.kortti1 = Qui_card(kortti, self.peli)
+                    self.kortti1.setFalse()
+                    self.peli.lisaaqkortti(self.kortti1)
+                    self.scene.addWidget(self.kortti1)
+                    self.kortti1.move(-25+150*x,475)
+                x+=1
+            self.view.show()
+            self.statusBar().showMessage("Pelaajan {} vuoro".format(pelaaja.return_name()))
 
 
     def init_buttons(self):  #pelin alkunäyttö, jossa start ja load buttonit

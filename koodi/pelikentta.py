@@ -31,7 +31,6 @@ class Pelikentta():
 
     def poistaqkortti(self,kortti):
         if kortti in self.qkortit_kasi:
-            print("ok")
             self.qkortit_kasi.remove(kortti)
         else:
             print("debuggaus poista qkortti kasi")

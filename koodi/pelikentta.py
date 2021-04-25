@@ -10,33 +10,20 @@ class Pelikentta():
         self.x=0 #on nolla jos pakassa on vielä kortteja
         self.qkortit_kasi = []
         self.qkortit_poyta = []
-        self.klikattukasi = []  #klikatut kortit
-        self.klikattupoyta = []
 
 
-    def lisaaklikattukasi(self, kortti):  #klikatut kortit pöydästä ja kädestä
-        self.klikattukasi.append(kortti)
+    def lisaaqkorttipoyta(self,kortti):
+        self.qkortit_poyta.append(kortti)
 
-    def lisaaklikattupoyta(self, kortti):
-        self.klikattupoyta.append(kortti)
-
-    def poistaklikattukasi(self,kortti):
-        if kortti in self.klikattukasi():
-            self.klikattukasi.remove(kortti)
+    def poistaqkorttipoyta(self,kortti):
+        if kortti in self.qkortit_poyta:
+            self.qkortit_poyta.remove(kortti)
         else:
-            print("Debuggaus klik kasi")
+            print("debuggaus poista qkortti kasi")
 
-    def poistaklikattupoyta(self,kortti):
-        if kortti in self.klikattupoyta():
-            self.klikattupoyta.remove(kortti)
-        else:
-            print("Debuggaus klik poyta")
+    def getqkortit_poyta(self):
+        return self.qkortit_poyta
 
-    def returnklikattukasi(self):
-        return self.klikattukasi
-
-    def returnklikattupoyta(self):
-        return self.klikattupoyta
 
     def lisaaqkortti(self,kortti):
         self.qkortit_kasi.append(kortti)
@@ -123,11 +110,16 @@ class Pelikentta():
 
     def klikkaus(self,qkortti):
         if qkortti.returnpaikka() == True:  #True jos kortti pöydässä, kädessä False
-            self.lisaaklikattupoyta(qkortti)
-            print("poyta")
-        else:
-            if len(self.klikattukasi)>1:
-                self.poistaklikattukasi = []
+            if qkortti.getklikattu() == 1:
+                qkortti.setklikattu0()
+            else:
+                qkortti.setklikattu1()
 
-            self.lisaaklikattukasi(qkortti)
-            print("kasi")
+        else:
+            if qkortti.getklikattu() == 1:
+                for kortti in self.qkortit_kasi:
+                    kortti.setklikattu0()
+            else:
+                for kortti in self.qkortit_kasi:
+                    kortti.setklikattu0()
+                qkortti.setklikattu1()

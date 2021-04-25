@@ -121,7 +121,6 @@ class GUI_aloitus(QMainWindow):
 
     def showcards(self):  #avaa käden kortit
         x = 0
-       # pelaaja = self.peli.get_turn_pelaaja()
         kortit=self.peli.getqkortit_kasi()
         for kortti in kortit:
             kortti.avaakortti()
@@ -140,10 +139,11 @@ class GUI_aloitus(QMainWindow):
         else:
             x=0
             for kortti in poytakortit:
-                if kortti in klikatutpoyta:
-                    print("edistys")
+                if kortti.get_qui() == True:
+                    break
                 else:
-                    self.kortti1 = Qui_card(kortti, self.peli)
+                    kortti.set_quitrue()
+                    self.kortti1 = Qui_card(kortti, self.peli,x)
                     self.kortti1.setTrue()
                     self.kortti1.avaakortti()
                     self.scene.addWidget(self.kortti1)
@@ -153,10 +153,17 @@ class GUI_aloitus(QMainWindow):
             pelaaja = self.peli.get_turn_pelaaja()
             x=0
             for kortti in pelaaja.get_kasi():
-                if kortti in klikatutkasi:
-                    pass
+                if kortti.get_qui() is True:
+
+                    for qkortti in klikatutkasi:
+                        indeksi=qkortti.getindeksi()
+                        qkortti.move(-25+150*indeksi,450)
+
+                    break
                 else:
-                    self.kortti1 = Qui_card(kortti, self.peli)
+                    kortti.set_quitrue()
+                    self.kortti1 = Qui_card(kortti, self.peli, x)
+
                     self.kortti1.setFalse()
                     self.peli.lisaaqkortti(self.kortti1)
                     self.scene.addWidget(self.kortti1)

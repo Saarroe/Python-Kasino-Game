@@ -14,8 +14,6 @@ class Pelikentta():
         self.klikattupoyta = []
 
 
-
-
     def lisaaklikattukasi(self, kortti):  #klikatut kortit pöydästä ja kädestä
         self.klikattukasi.append(kortti)
 
@@ -128,5 +126,8 @@ class Pelikentta():
             self.lisaaklikattupoyta(qkortti)
             print("poyta")
         else:
+            if len(self.klikattukasi)>1:
+                self.poistaklikattukasi = []
+
             self.lisaaklikattukasi(qkortti)
             print("kasi")

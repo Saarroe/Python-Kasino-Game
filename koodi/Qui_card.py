@@ -7,17 +7,30 @@ from pelikentta import Pelikentta
 
 class Qui_card(QLabel):
 
-    def __init__(self, kortti, peli):
+    def __init__(self, kortti, peli, indeksi):
         super(Qui_card, self).__init__()
         #self.parent = parent
+        self.indeksi = indeksi
+        self.klikattu = 0 # jos klikattu arvo on 1
         self.card_back = QPixmap("kuvat/purple_back.jpg")
-        self.pic = QPixmap("kuvat/2C.jpg")
         self.kortti = kortti
         self.visible = False  #false kiinni, true oikein
         self.pixmap2 = QPixmap(self.teksti())
         self.kuva()
         self.paikka = None# True jos pöytä, false niin kädessä
         self.peli = peli
+
+    def setklikattu1(self):
+        self.klikattu = 1
+
+    def setklikattu0(self):
+        self.klikattu = 0
+
+    def getklikattu(self):
+        return self.klikattu
+
+    def getindeksi(self):
+        return self.indeksi
 
     def setTrue(self):
         self.paikka=True
@@ -50,6 +63,5 @@ class Qui_card(QLabel):
         return teksti
 
     def mousePressEvent(self,*args, **kwargs):
-        print("x")
         self.peli.klikkaus(self)
 

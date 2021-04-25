@@ -8,7 +8,7 @@ class Kortti():
     def __init__(self, maa, arvo):
         self.set_maa(maa)
         self.arvo = arvo
-        self.visibility = False
+        self.onkoqui = False
 
 
 
@@ -23,7 +23,8 @@ class Kortti():
     def get_arvo(self):
         return self.arvo
 
-    def set_visibility(self,boolean): #joko true tai false
-        self.visibility = boolean
-    def get_visibility(self):
-        return self.visibility
+    def set_quitrue(self): #joko true tai false
+        self.onkoqui = True
+
+    def get_qui(self):
+        return self.onkoqui

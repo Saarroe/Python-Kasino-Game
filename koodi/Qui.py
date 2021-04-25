@@ -33,7 +33,7 @@ class GUI_aloitus(QMainWindow):
 
         self.timer = QtCore.QTimer()  #jotta ei tarvitse päivittää käyttöliittymää manuaalisesti
         self.timer.timeout.connect(lambda: self.updatequi())
-        self.timer.start(15)
+        self.timer.start(100)
 
 
     def get_player_amount(self):
@@ -85,7 +85,7 @@ class GUI_aloitus(QMainWindow):
 
 
         self.statusBar().showMessage("Peli alkaa jaetaan kortit")
-        self.updatequi() #korttien lisäys kentälle, tilanteen päivtys
+        #self.updatequi() #korttien lisäys kentälle, tilanteen päivtys
 
     def newGui(self):
         #luo scenen pelipöydän
@@ -114,9 +114,10 @@ class GUI_aloitus(QMainWindow):
 
         self.nimi = QLabel(teksti)
         self.nimi.setStyleSheet("background-image: url(kuvat/board.jpg)")
-        self.nimi.setFixedWidth(100)
+        self.nimi.setFixedWidth(175)
+        self.nimi.setFixedHeight(25)
         self.scene.addWidget(self.nimi)
-        self.nimi.move(200,630)
+        self.nimi.move(160,630)
 
         self.viiva = QtWidgets.QGraphicsLineItem()
         self.scene.addItem(self.viiva)
@@ -129,18 +130,20 @@ class GUI_aloitus(QMainWindow):
 
         self.putcardbutton = QPushButton("Laita kortti pöytään", self)  # sceneen napit laita pöytään
         self.putcardbutton.setStyleSheet("color: black; background: grey")
+        self.putcardbutton.clicked.connect(lambda: self.putcard())
         self.putcardbutton.adjustSize()
 
         self.takebutton = QPushButton("Ota valitut kortit", self)
         self.takebutton.setStyleSheet("color: black; background: grey")
+        self.takebutton.clicked.connect(lambda: self.takecard())
         self.takebutton.adjustSize()
 
-        self.nextbutton = QPushButton("seuraava vuoro", self)
+        self.nextbutton = QPushButton("Seuraava vuoro", self)
         self.nextbutton .setStyleSheet("color: black; background: grey")
         #self.nextbutton .clicked.connect(lambda: self.nextturn())
         self.nextbutton .adjustSize()
 
-        self.showbutton = QPushButton("näyta kortit", self)
+        self.showbutton = QPushButton("Näyta kortit", self)
         self.showbutton.setStyleSheet("color: black; background: grey")
         self.showbutton.clicked.connect(lambda: self.showcards())
         self.showbutton.adjustSize()
@@ -151,13 +154,96 @@ class GUI_aloitus(QMainWindow):
         self.horizontal.addWidget(self.nextbutton)
         self.vbox.addLayout(self.horizontal)  #lisätään horizontal view
 
+    def takecard(self):
+        vara = []
+        kasi =[]
+        quip = []
+        quik = []
+        pelaaja = self.peli.get_turn_pelaaja()
+
+        if pelaaja.getpelattu() is False:
+            for qkortti in self.peli.getqkortit_kasi():
+                if qkortti.getklikattu() == 1:
+                    kasi.append(qkortti.getkortti())
+                    quik.append(qkortti)
+
+            for qkortti in self.peli.getqkortit_poyta():
+                if qkortti.getklikattu() == 1:
+                    uusi = qkortti.getkortti()
+                    vara.append(uusi)
+                    quip.append(qkortti)
+
+            if len(vara)>0 and len(kasi)==1:
+
+                ok = self.peli.laske_oikein(vara,kasi)
+                if ok is False:
+                    self.statusBar().showMessage("Siirto ei ole sääntöjen mukainen")
+                else:
+                    pelaaja.setpelattutrue()
+                    for qkortti in quip:
+                        qkortti.setklikattu0()
+                        self.peli.poistaqkorttipoyta(qkortti)
+
+                        qkortti.clear()
+                        qkortti.setpixmapnone()
+                        pelaaja.lisaa_kortti()
+                    for kortti in vara:
+                        self.peli.otakortti_poydasta(kortti)
+                    for qkortti in quik:
+                        qkortti.setklikattu0()
+                        self.peli.poistaqkortti(qkortti)
+                        pelaaja.lisaa_kortti()
+                        qkortti.clear()
+                        qkortti.setpixmapnone()
+                    for kortti in kasi:
+                        pelaaja.pelaa_kortti(kortti)
+                        if kortti.get_arvo() == 14:
+                            pelaaja.lisaaassa()
+                        self.peli.lisaakorttipelaajalle()
+                    pelaaja.setpelattutrue()
+            else:
+                self.statusBar().showMessage("Valitse yksi kortti kädestä ja halutut kortit pöydältä")
+        else:
+            self.statusBar().showMessage("Pelaajan {} siirto tehty, "
+                                         "paina seuraava vuoro".format(pelaaja.return_name()))
+
+    def putcard(self):
+        x=0
+
+        pelaaja = self.peli.get_turn_pelaaja()
+        if pelaaja.getpelattu() is False:
+            for qkortti in self.peli.getqkortit_kasi():
+                if qkortti.getklikattu() == 1:
+                    kortti = qkortti.getkortti()
+                    qkortti.setklikattu0()
+                    uusi = len(self.peli.getqkortit_poyta())
+                    qkortti.setindeksi(uusi)
+                    qkortti.setTrue()
+
+                    self.peli.lisaaqkorttipoyta(qkortti)
+                    self.peli.poistaqkortti(qkortti)
+                    self.peli.pelaa_kortin_poytaan(kortti)
+                    pelaaja.setpelattutrue()
+                    x=0
+                    self.statusBar().showMessage("Pelaajan {} siirto tehty, "
+                                                 "paina seuraava vuoro".format(pelaaja.return_name()))
+                    break
+            else:
+                x=1
+                pass
+        else:
+            pass
+        if x==1:
+            print("ei toimi")
+
+
     def showcards(self):  #avaa käden kortit
         x = 0
         kortit=self.peli.getqkortit_kasi()
         for kortti in kortit:
             kortti.avaakortti()
             self.scene.addWidget(kortti)
-            kortti.move(-25+150*x,475)
+            kortti.move(-25+150*x,460)
             x += 1
 
 
@@ -170,14 +256,19 @@ class GUI_aloitus(QMainWindow):
             pass
         else:
             x=0
+
             for kortti in poytakortit:
                 if kortti.get_qui() == 1:
+                    y = 0
                     for qkortti in qkortitpoyta:
-                        indeksi = qkortti.getindeksi()
+
+                        #indeksi = qkortti.getindeksi()
+                        qkortti.setindeksi(y)
                         if qkortti.getklikattu() == 0:
-                            qkortti.move(-200+150*indeksi,75)
+                            qkortti.move(-200+150*y,75)
                         else:
-                            qkortti.move(-200+150*indeksi,50)
+                            qkortti.move(-200+150*y,50)
+                        y+=1
 
                 else:
                     kortti.set_quitrue()
@@ -191,27 +282,28 @@ class GUI_aloitus(QMainWindow):
 
             pelaaja = self.peli.get_turn_pelaaja()
             x=0
+            y=0
             for kortti in pelaaja.get_kasi():
                 if kortti.get_qui() is True:
-
+                    y=0
                     for qkortti in qkortitkasi:
-                        indeksi = qkortti.getindeksi()
+                        qkortti.setindeksi(y)
                         if qkortti.getklikattu() == 0:
-                            qkortti.move(-25 + 150 * indeksi, 475)
+                            qkortti.move(-25 + 150 * y, 460)
                         else:
-                            qkortti.move(-25+150*indeksi, 450)
-                    break
+                            qkortti.move(-25+150*y, 435)
+                        y+=1
                 else:
                     kortti.set_quitrue()
                     self.kortti1 = Qui_card(kortti, self.peli, x)
                     self.kortti1.setFalse()
                     self.peli.lisaaqkortti(self.kortti1)
                     self.scene.addWidget(self.kortti1)
-                    self.kortti1.move(-25+150*x,475)
+                    self.kortti1.move(-25+150*x,460)
                 x+=1
             self.nimi.setText(pelaaja.return_name())
             self.view.show()
-            self.statusBar().showMessage("Pelaajan {} vuoro".format(pelaaja.return_name()))
+            #self.statusBar().showMessage("Pelaajan {} vuoro".format(pelaaja.return_name()))
 
 
     def init_buttons(self):  #pelin alkunäyttö, jossa start ja load buttonit
@@ -237,7 +329,7 @@ class GUI_aloitus(QMainWindow):
         self.setGeometry(500, 150, 1200, 800)
         self.setWindowTitle("Kasino")
         self.init_buttons()
-        self.setStyleSheet("background-image: url(kuvat/tausta.jpg)")
+        #self.setStyleSheet("background-image: url(kuvat/tausta.jpg)")
         self.show()
 
     def save_game(self):

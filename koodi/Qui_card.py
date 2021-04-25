@@ -20,6 +20,12 @@ class Qui_card(QLabel):
         self.paikka = None# True jos pöytä, false niin kädessä
         self.peli = peli
 
+    def setpixmapnone(self):
+        self.setStyleSheet("background:transparent")
+
+    def getkortti(self):
+        return self.kortti
+
     def setklikattu1(self):
         self.klikattu = 1
 
@@ -28,6 +34,9 @@ class Qui_card(QLabel):
 
     def getklikattu(self):
         return self.klikattu
+
+    def setindeksi(self,x):
+        self.indeksi = x
 
     def getindeksi(self):
         return self.indeksi
@@ -44,6 +53,8 @@ class Qui_card(QLabel):
     def kuva(self):
         if self.visible is False:
             self.setPixmap(self.card_back.scaled(100,150))
+    def getvisibility(self):
+        return self.visible
 
     def suljekortti(self):
         self.visible = False

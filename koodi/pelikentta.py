@@ -1,5 +1,6 @@
 from korttipakka import Korttipakka
 from Pelaaja import Player
+
 class Pelikentta():
 
     def __init__(self):
@@ -30,6 +31,7 @@ class Pelikentta():
 
     def poistaqkortti(self,kortti):
         if kortti in self.qkortit_kasi:
+            print("ok")
             self.qkortit_kasi.remove(kortti)
         else:
             print("debuggaus poista qkortti kasi")
@@ -55,11 +57,9 @@ class Pelikentta():
     def get_turn_pelaaja(self):
         return self.pelaajaa_lista[self.turn]
 
-    def otakortti_poydasta(self,i):
-        if i < len(self.poyta):
-            kortti = self.poyta[i]
-            self.poyta.remove(kortti)
-            return kortti
+    def otakortti_poydasta(self,kortti):
+        self.poyta.remove(kortti)
+
 
     def get_pakka(self):
         return self.pakka
@@ -74,14 +74,34 @@ class Pelikentta():
             kortti = self.pakka.nosta_kortti()
             self.lisaa_kortti_poytaan(kortti)
 
+    def lisaakorttipelaajalle(self):
+        pelaaja = self.pelaajaa_lista[self.turn]
+        kortti = self.pakka.nosta_kortti()
+        pelaaja.lisaa_kortti_kateen(kortti)
 
-    def laske_oikein(self, plr_kortti, pöyt_kortit):
-        if plr_kortti.get_maa()=="Ruutu" and plr_kortti_arvo == 10:
-            arvo = 16
-        elif plr_kortti_get_maa()== "Pata" and plr_kortti_arvo == 14:
-            arvo = 15
+    def laske_oikein(self, poyta, kasi):
+        #False jos määrä ei täsmää muuten True jos siirto ok
+        summa1=0
+        arvo2=kasi[0].get_arvo()
+
+        if kasi[0].get_maa() == "Ruutu" and arvo2 == 10:
+            arvo2 = 16
+        elif kasi[0].get_maa()== "Pata" and arvo2 == 2:
+            arvo2 = 15
+
+        for kortti in poyta:
+            arvo=kortti.get_arvo()
+            if arvo == 14:
+                arvo = 1
+            if arvo != arvo2:
+                summa1 += arvo
+        print(summa1)
+        print(arvo2)
+        if summa1 != arvo2:
+            return False
         else:
-            arvo = kortti.arvo
+            return True
+
 
 
     def seuraava_vuoro(self):
@@ -91,35 +111,35 @@ class Pelikentta():
             self.turn += 1
 
 
-    def pelaa_kortin_poytaan(self):
+    def pelaa_kortin_poytaan(self, kortti):
+
         pelaaja = self.pelaajaa_lista[self.turn]
-        kortti = pelaaja.pelaa_kortti(1)
+        pelaaja.pelaa_kortti(kortti)
         self.poyta.append(kortti)
+
         if len(self.pakka.kortit) == 0:
             print("pakka loppui")
+            pass
         else:
             kortti = self.pakka.nosta_kortti()
             pelaaja.lisaa_kortti_kateen(kortti)
-            self.seuraava_vuoro()
 
-    def saa_kortin_pöydästä(self):
-        halutut = []
-        pelaaja = self.pelaajaa_lista[self.turn]
-        halutut.append(self.poyta[1])
-        kortti = pelaaja.pelaa_kortti(1)
 
     def klikkaus(self,qkortti):
-        if qkortti.returnpaikka() == True:  #True jos kortti pöydässä, kädessä False
-            if qkortti.getklikattu() == 1:
-                qkortti.setklikattu0()
-            else:
-                qkortti.setklikattu1()
+        if qkortti.getvisibility() is True:
+            if qkortti.returnpaikka() == True:  #True jos kortti pöydässä, kädessä False
+                if qkortti.getklikattu() == 1:
+                    qkortti.setklikattu0()
+                else:
+                    qkortti.setklikattu1()
 
-        else:
-            if qkortti.getklikattu() == 1:
-                for kortti in self.qkortit_kasi:
-                    kortti.setklikattu0()
             else:
-                for kortti in self.qkortit_kasi:
-                    kortti.setklikattu0()
-                qkortti.setklikattu1()
+                if qkortti.getklikattu() == 1:
+                    for kortti in self.qkortit_kasi:
+                        kortti.setklikattu0()
+                else:
+                    for kortti in self.qkortit_kasi:
+                        kortti.setklikattu0()
+                    qkortti.setklikattu1()
+        else:
+            print("ei näin")

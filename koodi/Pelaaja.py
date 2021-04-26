@@ -34,6 +34,12 @@ class Player():
     def lisaapata(self):
         self.padat+=1
 
+    def getassat(self):
+        return self.assat
+
+    def getpadat(self):
+        return self.padat
+
     def lisaapata2(self):
         self.pata2 = True
 
@@ -54,6 +60,9 @@ class Player():
 
     def lisaa_kortti(self):
         self.saadut_kortit+=1
+
+    def getkortit(self):
+        return self.saadut_kortit
 
     def lisaa_mokki(self):
         self.mokit+=1

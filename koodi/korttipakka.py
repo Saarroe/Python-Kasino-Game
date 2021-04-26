@@ -10,6 +10,9 @@ class Korttipakka():
     def sekoita(self):
         random.shuffle(self.kortit)
 
+    def getkortit(self):
+        return self.kortit
+
 
     def set_kortit(self):
         maat = { "Hertta": Kortti.Hertta,"Ruutu": Kortti.Ruutu, "Pata": Kortti.Pata, "Risti": Kortti.Risti}

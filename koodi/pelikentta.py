@@ -61,8 +61,11 @@ class Pelikentta():
 
     def lisaakorttipelaajalle(self):
         pelaaja = self.pelaajaa_lista[self.turn]
-        kortti = self.pakka.nosta_kortti()
-        pelaaja.lisaa_kortti_kateen(kortti)
+        if len(self.pakka.getkortit())>0:
+            kortti = self.pakka.nosta_kortti()
+            pelaaja.lisaa_kortti_kateen(kortti)
+        else:
+            print("pakka loppui")
 
     def laske_oikein(self, poyta, kasi):
         #False jos määrä ei täsmää muuten True jos siirto ok
@@ -106,9 +109,9 @@ class Pelikentta():
         pelaaja.pelaa_kortti(kortti)
         self.poyta.append(kortti)
 
-        if len(self.pakka.kortit) == 0:
+        if len(self.pakka.getkortit()) == 0:
             print("pakka loppui")
-            pass
+
         else:
             kortti = self.pakka.nosta_kortti()
             pelaaja.lisaa_kortti_kateen(kortti)
@@ -116,7 +119,7 @@ class Pelikentta():
 
     def klikkaus(self,qkortti):
         pelaaja = self.get_turn_pelaaja()
-        if qkortti.getvisibility() is True:
+        if qkortti.getvisibility() is True and pelaaja.getpelattu() == False:
             if qkortti in self.qkortit_poyta:  #True jos kortti pöydässä, kädessä False
 
                 if qkortti.getklikattu() == 1:
@@ -134,3 +137,14 @@ class Pelikentta():
                     qkortti.setklikattu1()
         else:
             print("klikkaa avointa korttia")
+
+    def enitenkortteja(self):
+        suurin = 0
+
+        for pelaaja in self.pelaajaa_lista:
+            korttimaara = pelaaja.getkortit()
+            if korttimaara > suurin:
+                suurin= korttimaara
+                haluttu = pelaaja
+        print(haluttu.return_name())
+        return haluttu

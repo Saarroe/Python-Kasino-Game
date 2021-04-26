@@ -3,14 +3,14 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QLa
 from PyQt5.QtGui import QPixmap
 from pelikentta import Pelikentta
 
-#olio luo pelikorteille kuvakkeet
+#olio luo pelikorteille qlabelin ja asettaa sille pixmapin, joko kiinni tai auki
 
 class Qui_card(QLabel):
 
-    def __init__(self, kortti, peli, indeksi):
+    def __init__(self, kortti, peli):
         super(Qui_card, self).__init__()
 
-        self.indeksi = indeksi
+
         self.klikattu = 0 # jos klikattu arvo on 1
         self.card_back = QPixmap("kuvat/purple_back.jpg")
         self.kortti = kortti
@@ -26,6 +26,7 @@ class Qui_card(QLabel):
     def getkortti(self):
         return self.kortti
 
+
     def setklikattu1(self):
         self.klikattu = 1
 
@@ -35,20 +36,8 @@ class Qui_card(QLabel):
     def getklikattu(self):
         return self.klikattu
 
-    def setindeksi(self,x):
-        self.indeksi = x
 
-    def getindeksi(self):
-        return self.indeksi
 
-    def setTrue(self):
-        self.paikka=True
-
-    def setFalse(self):
-        self.paikka = False
-
-    def returnpaikka(self):
-        return self.paikka
 
     def kuva(self):
         if self.visible is False:

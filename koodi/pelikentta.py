@@ -9,7 +9,6 @@ class Pelikentta():
         self.turn = 0 #kenen vuoro
         self.poyta = []
         self.x=0 #on nolla jos pakassa on vielä kortteja
-        self.qkortit_kasi = []
         self.qkortit_poyta = []
 
 
@@ -24,19 +23,6 @@ class Pelikentta():
 
     def getqkortit_poyta(self):
         return self.qkortit_poyta
-
-
-    def lisaaqkortti(self,kortti):
-        self.qkortit_kasi.append(kortti)
-
-    def poistaqkortti(self,kortti):
-        if kortti in self.qkortit_kasi:
-            self.qkortit_kasi.remove(kortti)
-        else:
-            print("debuggaus poista qkortti kasi")
-
-    def getqkortit_kasi(self):
-        return self.qkortit_kasi
 
     def get_poyta(self):
         return self.poyta
@@ -94,17 +80,21 @@ class Pelikentta():
                 arvo = 1
             if arvo != arvo2:
                 summa1 += arvo
-        print(summa1)
-        print(arvo2)
-        if summa1 != arvo2:
-            return False
-        else:
+            if summa1 == arvo2:
+                summa1=0
+
+        if summa1 == arvo2 or summa1 == 0:
             return True
+        elif summa1 >arvo2:
+            pass
+
+        else:
+            return False
 
 
 
     def seuraava_vuoro(self):
-        if self.turn > len(self.pelaajaa_lista):
+        if self.turn == len(self.pelaajaa_lista)-1:
             self.turn = 0
         else:
             self.turn += 1
@@ -125,8 +115,10 @@ class Pelikentta():
 
 
     def klikkaus(self,qkortti):
+        pelaaja = self.get_turn_pelaaja()
         if qkortti.getvisibility() is True:
-            if qkortti.returnpaikka() == True:  #True jos kortti pöydässä, kädessä False
+            if qkortti in self.qkortit_poyta:  #True jos kortti pöydässä, kädessä False
+
                 if qkortti.getklikattu() == 1:
                     qkortti.setklikattu0()
                 else:
@@ -134,11 +126,11 @@ class Pelikentta():
 
             else:
                 if qkortti.getklikattu() == 1:
-                    for kortti in self.qkortit_kasi:
+                    for kortti in pelaaja.getqkortit_kasi():
                         kortti.setklikattu0()
                 else:
-                    for kortti in self.qkortit_kasi:
+                    for kortti in pelaaja.getqkortit_kasi():
                         kortti.setklikattu0()
                     qkortti.setklikattu1()
         else:
-            print("ei näin")
+            print("klikkaa avointa korttia")

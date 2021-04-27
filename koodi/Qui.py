@@ -135,10 +135,23 @@ class GUI_aloitus(QMainWindow):
         self.scene.addWidget(self.nimi)
         self.nimi.move(160,630)
 
-        self.viiva = QtWidgets.QGraphicsLineItem()
-        self.scene.addItem(self.viiva)
+       # self.viiva = QtWidgets.QGraphicsLineItem()
+        #self.scene.addItem(self.viiva)
+        self.pakkakuva = QLabel()
+        kuva = QtGui.QPixmap("kuvat/purple_back.jpg")
+        self.pakkakuva.setPixmap(kuva.scaled(100,150))
+        self.scene.addWidget(self.pakkakuva)
+        self.pakkakuva.move(650,250)
 
-        self.setStyleSheet("Background: transparent")
+
+        self.pakkalaskuri= QLabel()
+        self.scene.addWidget(self.pakkalaskuri)
+        self.pakkalaskuri.move(650,400)
+        self.pakkalaskuri.setStyleSheet("background-image: url(kuvat/board.jpg)")
+        self.pakkalaskuri.setFixedWidth(100)
+        self.pakkalaskuri.setFixedHeight(30)
+        #self.setStyleSheet("Background: transparent")
+        self.setStyleSheet("background: green")
 
         self.view.show()
 
@@ -171,41 +184,44 @@ class GUI_aloitus(QMainWindow):
         self.vbox.addLayout(self.horizontal)  #lisätään horizontal view
 
     def nextturn(self):
-
+        self.timer.stop()
         ekapelaaja = self.peli.get_turn_pelaaja()
-        if ekapelaaja.getpelattu() is True:
-            self.timer.stop()
+
+        if ekapelaaja.getpelattu() is True and len(ekapelaaja.getqkortit_kasi()) >0:
+
             for qkortti in self.peli.getqkortit_poyta():
                 qkortti.setklikattu0()
-            for qkortti in ekapelaaja.getqkortit_kasi():  #piilottaa kädessä olevat kortit
+            for qkortti in ekapelaaja.getqkortit_kasi():#piilottaa kädessä olevat kortit
+
+                qkortti.suljekortti()
                 qkortti.hide()
-            print(ekapelaaja.getkortit())
-            print(ekapelaaja.getassat())
-            print(ekapelaaja.getpadat())
+            print("kortit: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getkortit()))
+            print("assat: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getassat()))
+            print("padat: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getpadat()))
+            print("mökit: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getmokit()))
             ekapelaaja.setpelattufalse()
             self.peli.seuraava_vuoro()
 
             pelaaja = self.peli.get_turn_pelaaja()
             for qkortti in pelaaja.getqkortit_kasi():
                 qkortti.show()
-            self.timer.start()
+            self.statusBar().showMessage("Pelaajan {} vuoro alkaa".format(pelaaja.return_name()))
             self.updatequi()
+
         else:
             self.statusBar().showMessage("Tee ensiksi siirto: Ota halutut kortit tai laita kortti pöytään")
-
+        self.timer.start()
     def takecard(self):  #Käy läpi uusiksi rauhassa
-        self.timer.stop()
-        vara = []
-        kasi = []
-        quip = []
-        quik = []
-        pelaaja = self.peli.get_turn_pelaaja()
 
-        if pelaaja.getpelattu() is False:
+        vara = []
+        quip = []
+
+        pelaaja = self.peli.get_turn_pelaaja()
+        if pelaaja.getpelattu() is False and len(pelaaja.getqkortit_kasi()) > 0:
+            kasiq = None
             for qkortti in pelaaja.getqkortit_kasi():
                 if qkortti.getklikattu() == 1:
-                    kasi.append(qkortti.getkortti())
-                    quik.append(qkortti)
+                    kasiq = qkortti
 
             for qkortti in self.peli.getqkortit_poyta():
                 if qkortti.getklikattu() == 1:
@@ -213,54 +229,57 @@ class GUI_aloitus(QMainWindow):
                     vara.append(uusi)
                     quip.append(qkortti)
 
-            if len(vara)>0 and len(kasi)==1:
-
+            if len(vara)>0 and kasiq is not None:
+                kasi = kasiq.getkortti()
                 ok = self.peli.laske_oikein(vara,kasi)
+
                 if ok is False:
                     self.statusBar().showMessage("Siirto ei ole sääntöjen mukainen")
                 else:
+                    self.statusBar().showMessage("Pelaajan {} siirto tehty, "
+                                                 "paina seuraava vuoro".format(pelaaja.return_name()))
                     for qkortti in quip:
                         qkortti.setklikattu0()
+                        kortti = qkortti.getkortti()
+                        self.peli.otakortti_poydasta(kortti)
+
                         self.peli.poistaqkorttipoyta(qkortti)
                         qkortti.clear()  #poistaa kortin ja pistää sen läpinäkyväks
                         qkortti.setpixmapnone()
-
-                    for kortti in vara:
-                        pelaaja.lisaa_kortti()
-                        self.peli.otakortti_poydasta(kortti)
-                        if kortti.get_arvo() == 14:
-                            pelaaja.lisaaassa()
-                        elif kortti.get_arvo() == 2 and kortti.get_maa() == "Pata":
-                            pelaaja.lisaapata2()
-                        elif kortti.get_arvo() == 10 and kortti.get_maa() == "Ruutu":
-                            pelaaja.lisaaruutu10()
-                        elif kortti.get_maa() == "Pata" and kortti.get_arvo() != 2:
-                            pelaaja.lisaapata()
-                    for qkortti in quik:
-                        qkortti.setklikattu0()
-                        pelaaja.poistaqkortti(qkortti)
+                        qkortti.move(700,500)
                         pelaaja.lisaa_kortti()
 
-                        qkortti.clear()
-                        qkortti.setpixmapnone()
-                    for kortti in kasi:
-                        if len(kasi)>1:
-                            raise ValueError()
-                        pelaaja.pelaa_kortti(kortti)
                         if kortti.get_arvo() == 14:
                             pelaaja.lisaaassa()
-                        elif kortti.get_arvo() == 2 and kortti.get_maa() == "Pata":
+                        if kortti.get_arvo() == 2 and kortti.get_maa() == "Pata":
                             pelaaja.lisaapata2()
-                        elif kortti.get_arvo() == 10 and kortti.get_maa() == "Ruutu":
+                        if kortti.get_arvo() == 10 and kortti.get_maa() == "Ruutu":
                             pelaaja.lisaaruutu10()
-                        elif kortti.get_maa()=="Pata":
+                        if kortti.get_maa() == "Pata":
                             pelaaja.lisaapata()
+
+
+                    kasiq.setklikattu0()
+                    pelaaja.poistaqkortti(kasiq)
+                    pelaaja.pelaa_kortti(kasiq.getkortti())
+                    pelaaja.lisaa_kortti()
+                    kasiq.clear()
+                    kasiq.setpixmapnone()
+                    kasiq.move(700, 500)
+
+                    self.peli.lisaakorttipelaajalle()
+                    if kortti.get_arvo() == 14:
+                        pelaaja.lisaaassa()
+                    if kortti.get_arvo() == 2 and kortti.get_maa() == "Pata":
+                        pelaaja.lisaapata2()
+                    if kortti.get_arvo() == 10 and kortti.get_maa() == "Ruutu":
+                        pelaaja.lisaaruutu10()
+                    if kortti.get_maa()=="Pata":
+                        pelaaja.lisaapata()
                     if len(self.peli.getqkortit_poyta()) == 0:
                         pelaaja.lisaa_mokki()
 
-                    self.peli.lisaakorttipelaajalle()
-                    for kortti in pelaaja.getqkortit_kasi():
-                        kortti.suljekortti()
+
 
                     pelaaja.setpelattutrue()
             else:
@@ -269,44 +288,38 @@ class GUI_aloitus(QMainWindow):
             self.statusBar().showMessage("Pelaajan {} siirto tehty, "
                                            "paina seuraava vuoro".format(pelaaja.return_name()))
         self.updatequi()
-        self.timer.start()
+
     def putcard(self):
         x=0
-        self.timer.stop()
+
         pelaaja = self.peli.get_turn_pelaaja()
-        if pelaaja.getpelattu() is False:
+        if pelaaja.getpelattu() is False and len(pelaaja.getqkortit_kasi()) >0:
             for qkortti in pelaaja.getqkortit_kasi():
                 if qkortti.getklikattu() == 1:
                     kortti = qkortti.getkortti()
                     qkortti.setklikattu0()
-
-
-                    #qkortti.setTrue()
-
                     self.peli.lisaaqkorttipoyta(qkortti)
                     pelaaja.poistaqkortti(qkortti)
                     self.peli.pelaa_kortin_poytaan(kortti)
                     pelaaja.setpelattutrue()
                     x=0
-                    self.statusBar().showMessage("Pelaajan {} vuoro päättynyt, "
-                                                 "paina seuraava vuoro".format(pelaaja.return_name()))
-                    for qkortti in pelaaja.getqkortit_kasi():
-                        qkortti.suljekortti()
+                    self.statusBar().showMessage("Pelaajan {} siirto tehty".format(pelaaja.return_name()))
                     break
                 else:
-                    pass
+                    x=1
+
         else:
-            pass
+            self.statusBar().showMessage("Pelaajan {} vuoro päättynyt, "
+                                         "paina seuraava vuoro".format(pelaaja.return_name()))
         if x==1:
             self.statusBar().showMessage("Klikkaa ensiksi kädestä korttia minkä haluat valita")
-        else:
-            self.updatequi()
-        self.timer.start()
+        self.updatequi()
+
 
     def showcards(self):  #avaa käden kortit
         x = 0
         pelaaja = self.peli.get_turn_pelaaja()
-        if pelaaja.getpelattu() is False:
+        if pelaaja.getpelattu() is False and len(pelaaja.getqkortit_kasi()) > 0:
             kortit=pelaaja.getqkortit_kasi()
             for kortti in kortit:
                 kortti.avaakortti()
@@ -335,6 +348,7 @@ class GUI_aloitus(QMainWindow):
             else:
                 qkortti1.move(-25 + 150 * x, 435)
             x+=1
+        self.view.show()
 
     def updatequi(self):
 
@@ -343,39 +357,40 @@ class GUI_aloitus(QMainWindow):
         kasikortit = pelaaja.get_kasi()
         qkortitpoyta = self.peli.getqkortit_poyta()
         qkortitkasi= pelaaja.getqkortit_kasi()
+#Pöytäkortit kun kerran luotu niin aina auki, vain klikkaus muuttuu, minkä tekee timeri
 
-        if len(poytakortit) == 0:
-            pass
-        elif len(kasikortit) == 0:
-            pass
+        if len(qkortitpoyta) == 0 and len(poytakortit)>0:  #ei luotuja kortteja pöydässä
+            x=0
+            for kortti in poytakortit:
+                kortti.set_quitrue()
+                kortti1 = Qui_card(kortti, self.peli)
+                kortti1.avaakortti()
+                self.peli.lisaaqkorttipoyta(kortti1)
+                self.scene.addWidget(kortti1)
+                kortti1.move(-200 + 150 * x, 75)
+            x+=1
+        ####################### pöytä
+        if len(kasikortit) == 0:  #peli loppuu
+            print("Peli loppui")
+            self.loppu = Qui_pisteet()
+        elif len(qkortitkasi) == 0:  #ei luotoja qui card olioita, eka alustus
+            x=0
+            for kortti in kasikortit:
+                kortti.set_quitrue()
+                qkortti1 = Qui_card(kortti, self.peli)
+                pelaaja.lisaaqkortti(qkortti1)
+                self.scene.addWidget(qkortti1)
+                qkortti1.move(-25 + 150 * x, 460)
+                x+=1
         else:
             x=0
-
-            for kortti in poytakortit:
-                if kortti.get_qui() is True:
-                    pass
-                else:
-
-                    kortti.set_quitrue()
-                    kortti1 = Qui_card(kortti, self.peli)
-                    kortti1.avaakortti()
-                    self.peli.lisaaqkorttipoyta(kortti1)
-                    self.scene.addWidget(kortti1)
-                    kortti1.move(-200 + 150 * x, 75)
-                x+=1
-            y=0
-            for qkortti in qkortitpoyta:
-                qkortti.move(-200+150*y,75)
-                y+=1
-            x=0
-
             for kortti in kasikortit:
                 if kortti.get_qui() is True:
                     pass
                 else:
                     kortti.set_quitrue()
                     qkortti1 = Qui_card(kortti, self.peli)
-
+                    qkortti1.avaakortti()
                     pelaaja.lisaaqkortti(qkortti1)
                     self.scene.addWidget(qkortti1)
                     qkortti1.move(-25 + 150 * x, 460)
@@ -383,8 +398,14 @@ class GUI_aloitus(QMainWindow):
             x=0
             for qkortti in qkortitkasi:
                 qkortti.move(-25 + 150 * x, 460)
-            self.nimi.setText(pelaaja.return_name())
-            self.view.show()
+        self.nimi.setText(pelaaja.return_name())
+        if len(self.peli.pakka.getkortit()) > 0:
+            self.pakkalaskuri.setText("kortit: {}".format(str(len(self.peli.pakka.getkortit()))))
+            self.pakkalaskuri.adjustSize()
+        else:
+            self.pakkalaskuri.setText("Pakka loppui")
+            self.pakkakuva.hide()
+        self.view.show()
 
 
 

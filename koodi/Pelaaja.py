@@ -14,6 +14,13 @@ class Player():
         self.pata2 = False
         self.ruutu10 = False
         self.pelattu = False #false jos ei ole vielä pelannut vuoroa
+
+    def lisaapiste(self):
+        self.pisteet+=1
+
+    def getpisteet(self):
+        return self.pisteet
+
     def nollaaqkasi(self):
         self.qkasi = []
     def lisaaqkortti(self,kortti):
@@ -43,6 +50,12 @@ class Player():
     def lisaapata2(self):
         self.pata2 = True
 
+    def getpata2(self):
+        return self.pata2
+
+    def getruutu10(self):
+        return self.ruutu10
+
     def lisaaruutu10(self):
         self.ruutu10 = True
 
@@ -69,6 +82,9 @@ class Player():
 
     def nollaa_mokit(self):
         self.mokit=0
+
+    def getmokit(self):
+        return self.mokit
 
     def get_kasi(self):
         return self.kasi

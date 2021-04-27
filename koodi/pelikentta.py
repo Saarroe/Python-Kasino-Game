@@ -16,10 +16,13 @@ class Pelikentta():
         self.qkortit_poyta.append(kortti)
 
     def poistaqkorttipoyta(self,kortti):
+
         if kortti in self.qkortit_poyta:
+
             self.qkortit_poyta.remove(kortti)
         else:
-            print("debuggaus poista qkortti kasi")
+
+            print("debuggaus poista qkortti pöytä")
 
     def getqkortit_poyta(self):
         return self.qkortit_poyta
@@ -70,11 +73,11 @@ class Pelikentta():
     def laske_oikein(self, poyta, kasi):
         #False jos määrä ei täsmää muuten True jos siirto ok
         summa1=0
-        arvo2=kasi[0].get_arvo()
+        arvo2=kasi.get_arvo()
 
-        if kasi[0].get_maa() == "Ruutu" and arvo2 == 10:
+        if kasi.get_maa() == "Ruutu" and arvo2 == 10:
             arvo2 = 16
-        elif kasi[0].get_maa()== "Pata" and arvo2 == 2:
+        elif kasi.get_maa()== "Pata" and arvo2 == 2:
             arvo2 = 15
 
         for kortti in poyta:
@@ -119,32 +122,70 @@ class Pelikentta():
 
     def klikkaus(self,qkortti):
         pelaaja = self.get_turn_pelaaja()
+        qkorttikasi = pelaaja.getqkortit_kasi()
+
+        #print(qkortti.getkortti().get_arvo())
+        #print("Käsi:")
+        #for x in qkorttikasi:
+        #    print(x.getkortti().get_arvo())
+        #print("Pöytä")
+       # for y in self.getqkortit_poyta():
+        #    print(y.getkortti().get_arvo())
         if qkortti.getvisibility() is True and pelaaja.getpelattu() == False:
             if qkortti in self.qkortit_poyta:  #True jos kortti pöydässä, kädessä False
 
                 if qkortti.getklikattu() == 1:
+
                     qkortti.setklikattu0()
                 else:
                     qkortti.setklikattu1()
 
             else:
                 if qkortti.getklikattu() == 1:
+
                     for kortti in pelaaja.getqkortit_kasi():
                         kortti.setklikattu0()
+
                 else:
+
                     for kortti in pelaaja.getqkortit_kasi():
                         kortti.setklikattu0()
                     qkortti.setklikattu1()
         else:
             print("klikkaa avointa korttia")
 
-    def enitenkortteja(self):
+    def enitenkortteja(self):  #Piste kellä eniten kortteja
         suurin = 0
-
         for pelaaja in self.pelaajaa_lista:
             korttimaara = pelaaja.getkortit()
             if korttimaara > suurin:
                 suurin= korttimaara
                 haluttu = pelaaja
-        print(haluttu.return_name())
-        return haluttu
+        haluttu.lisaapiste()
+
+    def enitenpatoja(self):  #kaksi pistettä kellä eniten patoja
+        suurin = 0
+        for pelaaja in self.pelaajaa_lista:
+            padat = pelaaja.getpadat()
+            if padat > suurin:
+                suurin = padat
+                haluttu = pelaaja
+        haluttu.lisaapiste()
+        haluttu.lisaapiste()
+
+    def muutpisteet(self):
+        for pelaaja in self.pelaajaa_lista:
+            for piste in range(len(pelaaja.getassat())):  # pisteet ässistä
+                pelaaja.lisaapiste()
+            for piste in range(len(pelaaja.getmokit())): # Pisteet mökeistä
+                pelaaja.lisaapiste()
+            if pelaaja.getpata2() is True:  # Piste pata2
+                pelaaja.lisaapiste()
+            if pelaaja.getruutu10() is True: # 2 pistettä ruutu10
+                pelaaja.lisaapiste()
+                pelaaja.lisaapiste()
+
+    def laskepisteet(self):
+        self.enitenkortteja()
+        self.enitenpatoja()
+        self.muutpisteet()

@@ -9,7 +9,7 @@ class Qui_pisteet(QWidget):
 
     def __init__(self, peli):
         super(Qui_pisteet, self).__init__()
-        self.kesken = x #False jos kierros kesken, muuten True
+
         self.peli = peli
         self.setWindowTitle("Pistetaulukko")
         self.vbox = QtWidgets.QVBoxLayout()
@@ -24,20 +24,15 @@ class Qui_pisteet(QWidget):
         self.taulukko = QGridLayout()
         self.taulukko.addWidget(QLabel(),0,0)
         pituus = len(pelaajat)
+
+        self.taulukko.addWidget(QLabel("Kortit"),1,1)
+        self.taulukko.addWidget(QLabel("Padat"),1,2)
+        self.taulukko.addWidget(QLabel("Ässät"), 1, 2)
+        self.taulukko.addWidget(QLabel("Mökit"), 1, 3)
+
         for j in range(pituus):
-            self.taulukko.addWidget(QLabel(pelaajat[j].return_name()),0,j+1)
-        self.taulukko.addWidget(QLabel("Kortit"),1,0)
-        for j in range(pituus):
-            pelaaja = pelaajat[j]
-            self.taulukko.addWidget(QLabel(str(pelaaja.getkortit())),1,j+1)
-        self.taulukko.addWidget(QLabel("Padat"),2,0)
-        for j in range(pituus):
-            pelaaja = pelaajat[j]
-            self.taulukko.addWidget(QLabel(str(pelaaja.getpadat())),2,j+1)
-        self.taulukko.addWidget(QLabel("Ässät"), 3, 0)
-        for j in range(pituus):
-            pelaaja = pelaajat[j]
-            self.taulukko.addWidget(QLabel(str(pelaaja.getassat())),3,j+1)
+            self.taulukko.addWidget(QLabel(pelaajat[j].return_name()),j+1,0)
+
 
         self.vbox.addLayout(self.taulukko)
 

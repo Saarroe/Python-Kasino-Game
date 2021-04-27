@@ -36,12 +36,10 @@ class Qui_card(QLabel):
     def getklikattu(self):
         return self.klikattu
 
-
-
-
     def kuva(self):
         if self.visible is False:
             self.setPixmap(self.card_back.scaled(100,150))
+
     def getvisibility(self):
         return self.visible
 

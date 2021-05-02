@@ -137,19 +137,24 @@ class GUI_aloitus(QMainWindow):
         teksti=pelaaja.return_name()
 
         self.nimi = QLabel(teksti)
-        self.nimi.setStyleSheet("background-image: url(kuvat/board.jpg)")
+        self.nimi.setStyleSheet("background-image: url(kuvat/board.jpg); font-size 50px")
         self.nimi.setFixedWidth(175)
         self.nimi.setFixedHeight(25)
         self.scene.addWidget(self.nimi)
-        self.nimi.move(160,630)
+        self.nimi.move(160,670)
 
-       # self.viiva = QtWidgets.QGraphicsLineItem()
-        #self.scene.addItem(self.viiva)
+        self.viiva = QLabel()
+        self.scene.addWidget(self.viiva)
+        self.viiva.setStyleSheet("background: black")
+        self.viiva.setFixedHeight(5)
+        self.viiva.setFixedWidth(1150)
+        self.viiva.move(-250, 230)
+
         self.pakkakuva = QLabel()
         kuva = QtGui.QPixmap("kuvat/purple_back.jpg")
         self.pakkakuva.setPixmap(kuva.scaled(100,150))
         self.scene.addWidget(self.pakkakuva)
-        self.pakkakuva.move(650,250)
+        self.pakkakuva.move(650,260)
 
 
         self.pakkalaskuri= QLabel()
@@ -434,9 +439,9 @@ class GUI_aloitus(QMainWindow):
         x=0
         for qkortti1 in qkortitkasi:
             if qkortti1.getklikattu() == 0:
-                qkortti1.move(-25 + 150 * x, 460)
+                qkortti1.move(-25 + 150 * x, 490)
             else:
-                qkortti1.move(-25 + 150 * x, 435)
+                qkortti1.move(-25 + 150 * x, 465)
             x+=1
         self.view.show()
 
@@ -470,7 +475,7 @@ class GUI_aloitus(QMainWindow):
                 qkortti1 = Qui_card(kortti, self.peli)
                 pelaaja.lisaaqkortti(qkortti1)
                 self.scene.addWidget(qkortti1)
-                qkortti1.move(-25 + 150 * x, 460)
+                qkortti1.move(-25 + 150 * x, 490)
                 x+=1
         else:
             x=0
@@ -483,11 +488,11 @@ class GUI_aloitus(QMainWindow):
                     qkortti1.avaakortti()
                     pelaaja.lisaaqkortti(qkortti1)
                     self.scene.addWidget(qkortti1)
-                    qkortti1.move(-25 + 150 * x, 460)
+                    qkortti1.move(-25 + 150 * x, 490)
                 x+=1
             x=0
             for qkortti in qkortitkasi:
-                qkortti.move(-25 + 150 * x, 460)
+                qkortti.move(-25 + 150 * x, 490)
         self.nimi.setText(pelaaja.return_name())
         if len(self.peli.pakka.getkortit()) > 0:
             self.pakkalaskuri.setText("kortit: {}".format(str(len(self.peli.pakka.getkortit()))))
@@ -501,22 +506,22 @@ class GUI_aloitus(QMainWindow):
 
     def init_buttons(self):  #pelin alkunäyttö, jossa start ja load buttonit
 
-        self.start_button = QPushButton("Start new game")
+        self.start_button = QPushButton("Aloita uusi peli")
         self.start_button.clicked.connect(lambda: self.start())
 
         self.start_button.setStyleSheet("color: black; background: orange")
-        self.start_button.setFixedHeight(75)
-        self.start_button.setFixedWidth(200)
+        self.start_button.setFixedHeight(50)
+        self.start_button.setFixedWidth(150)
 
         self.vbox.addWidget(self.start_button)
 
 
 
-        self.load_button = QPushButton("Load game", self)
+        self.load_button = QPushButton("Lataa peli", self)
         self.load_button.setStyleSheet("color: black; background: orange")
         self.load_button.clicked.connect(lambda: self.load_game())
-        self.load_button.setFixedHeight(75)
-        self.load_button.setFixedWidth(200)
+        self.load_button.setFixedHeight(50)
+        self.load_button.setFixedWidth(150)
         self.horizontal.addWidget(self.load_button)
         self.vbox.addWidget(self.load_button)
 

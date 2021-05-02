@@ -12,20 +12,20 @@ class GUI_aloitus(QMainWindow):
 
     def __init__(self):
         super().__init__()
-
+        self.peli = None
         self.setCentralWidget(QtWidgets.QWidget())
         self._init_window()
         self.statusBar()  #luo statusbar jotta kerrotaan käyttäjälle tilanne
-        self.peli = Pelikentta()  #luo kentän ja pakan
+
         self.exitAct = QAction('&Lopetetaan peli', self)
         self.exitAct.triggered.connect(self.close)
 
         self.statusBar()
-        self.statusBar().setStyleSheet("Background: grey")
+        self.statusBar().setStyleSheet("Background: orange")
         self.statusBar().showMessage("Tervetuloa pelaamaan kasinoa")
 
         menubar = self.menuBar()
-        menubar.setStyleSheet("Background: grey")
+        menubar.setStyleSheet("Background: orange")
 
         self.fileMenu = menubar.addMenu('&Lopeta')
         self.pisteMenu = menubar.addMenu('&Pistetaulukko')
@@ -38,11 +38,13 @@ class GUI_aloitus(QMainWindow):
         self.pisteMenu.addAction(self.pisteet)
 
 
-
+        self.tallennus = QAction('&Tallennetaan peli')
+        self.tallennus.triggered.connect(lambda: self.save_game())
+        self.saveMenu.addAction(self.tallennus)
     def pistetaulukko(self):
-        if len(self.peli.return_pelaajat()) > 0:
+        if self.peli != None:
 
-            self.piste = Qui_pisteet(self.peli)
+            self.piste = Qui_pisteet(self.peli, False)
 
         else:
             QMessageBox.warning(self, "Ei pelaajia", "Aloita peli ensin")
@@ -54,12 +56,12 @@ class GUI_aloitus(QMainWindow):
 
             try:
                 count = int(count)
-                if count < 2 or count >6:
+                if count < 2 or count >9:
                     pass
                 else:
                     return count
             except ValueError:
-                count, ok = QInputDialog.getText(self,"Pelaaja", "Väärä määrä pelaajia\nAnna luku väliltä (2-6):")
+                QMessageBox.information(self, "Väärä luku", "Anna luku väliltä 2-6")
 
     def newplayer(self,x):
 
@@ -78,6 +80,7 @@ class GUI_aloitus(QMainWindow):
         return True
 
     def start(self):
+        self.peli = Pelikentta(True)  # luo kentän ja pakan, on eka init pakalle
         # New game, how many players
         count = self.get_player_amount()
         x = 0
@@ -92,7 +95,12 @@ class GUI_aloitus(QMainWindow):
         self.start_button.hide()  #Piilotetaan buttonit ja lisätään uusi näyttö
         self.load_button.hide()
         self.newGui()
+
+
         self.peli.aloita_peli()
+        pelaajat = self.peli.return_pelaajat()
+        pelaajat[0].setjakajatrue()
+
 
         self.updatequi()# Pelaajat lisätty 2-8PLR, jaetaan kortit
 
@@ -106,12 +114,12 @@ class GUI_aloitus(QMainWindow):
     def newGui(self):
         #luo scenen pelipöydän
         self.scene = QtWidgets.QGraphicsScene()
-        self.scene.setSceneRect(0,0,550,650)
+        self.scene.setSceneRect(0,0,650,750)
 
         self.view = QtWidgets.QGraphicsView(self.scene, self)
         self.view.setStyleSheet("background-image: url(kuvat/board.jpg); border: transparent")
 
-        self.view.adjustSize()
+        #self.view.adjustSize()
 
         self.vbox.addWidget(self.view)
         #luodaan siirtoja varten
@@ -146,7 +154,7 @@ class GUI_aloitus(QMainWindow):
 
         self.pakkalaskuri= QLabel()
         self.scene.addWidget(self.pakkalaskuri)
-        self.pakkalaskuri.move(650,400)
+        self.pakkalaskuri.move(650,425)
         self.pakkalaskuri.setStyleSheet("background-image: url(kuvat/board.jpg)")
         self.pakkalaskuri.setFixedWidth(100)
         self.pakkalaskuri.setFixedHeight(30)
@@ -158,22 +166,22 @@ class GUI_aloitus(QMainWindow):
     def newbuttons(self):
 
         self.putcardbutton = QPushButton("Laita kortti pöytään", self)  # sceneen napit laita pöytään
-        self.putcardbutton.setStyleSheet("color: black; background: grey")
+        self.putcardbutton.setStyleSheet("color: black; background: orange")
         self.putcardbutton.clicked.connect(lambda: self.putcard())
         self.putcardbutton.adjustSize()
 
         self.takebutton = QPushButton("Ota valitut kortit", self)
-        self.takebutton.setStyleSheet("color: black; background: grey")
+        self.takebutton.setStyleSheet("color: black; background: orange")
         self.takebutton.clicked.connect(lambda: self.takecard())
         self.takebutton.adjustSize()
 
         self.nextbutton = QPushButton("Seuraava vuoro", self)
-        self.nextbutton .setStyleSheet("color: black; background: grey")
-        self.nextbutton .clicked.connect(lambda: self.nextturn())
-        self.nextbutton .adjustSize()
+        self.nextbutton.setStyleSheet("color: black; background: orange")
+        self.nextbutton.clicked.connect(lambda: self.nextturn())
+        self.nextbutton.adjustSize()
 
         self.showbutton = QPushButton("Näyta kortit", self)
-        self.showbutton.setStyleSheet("color: black; background: grey")
+        self.showbutton.setStyleSheet("color: black; background: orange")
         self.showbutton.clicked.connect(lambda: self.showcards())
         self.showbutton.adjustSize()
 
@@ -183,11 +191,14 @@ class GUI_aloitus(QMainWindow):
         self.horizontal.addWidget(self.nextbutton)
         self.vbox.addLayout(self.horizontal)  #lisätään horizontal view
 
+        self.uusikierros = None
+
     def nextturn(self):
+
         self.timer.stop()
         ekapelaaja = self.peli.get_turn_pelaaja()
 
-        if ekapelaaja.getpelattu() is True and len(ekapelaaja.getqkortit_kasi()) >0:
+        if ekapelaaja.getpelattu() is True:
 
             for qkortti in self.peli.getqkortit_poyta():
                 qkortti.setklikattu0()
@@ -195,21 +206,93 @@ class GUI_aloitus(QMainWindow):
 
                 qkortti.suljekortti()
                 qkortti.hide()
-            print("kortit: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getkortit()))
-            print("assat: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getassat()))
-            print("padat: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getpadat()))
-            print("mökit: {} {}".format(ekapelaaja.return_name(), ekapelaaja.getmokit()))
+
             ekapelaaja.setpelattufalse()
             self.peli.seuraava_vuoro()
-
             pelaaja = self.peli.get_turn_pelaaja()
-            for qkortti in pelaaja.getqkortit_kasi():
-                qkortti.show()
-            self.statusBar().showMessage("Pelaajan {} vuoro alkaa".format(pelaaja.return_name()))
-            self.updatequi()
+
+            if len(pelaaja.get_kasi())>0:
+                for qkortti in pelaaja.getqkortit_kasi():
+                    qkortti.show()
+                self.statusBar().showMessage("Pelaajan {} vuoro alkaa".format(pelaaja.return_name()))
+                self.updatequi()
+
+                self.timer.start()
+
+            else:
+                QMessageBox.information(self, "Kierros loppui", "Näytetään pistetilanne")
+                for pelaaja in self.peli.return_pelaajat():  #Annetaan pöydässä olevat loput kortit pelaajalle
+
+                    #joka otta kortteja pöydästä viimeksi
+                    if pelaaja.getvika() is True:
+                        for kortti in self.peli.get_poyta():
+                            pelaaja.lisaa_kortti()
+                            if kortti.get_arvo() == 14:
+                                pelaaja.lisaaassa()
+                            if kortti.get_arvo() == 2 and kortti.get_maa() == "Pata":
+                                pelaaja.lisaapata2()
+                            if kortti.get_arvo() == 10 and kortti.get_maa() == "Ruutu":
+                                pelaaja.lisaaruutu10()
+                            if kortti.get_maa() == "Pata":
+                                pelaaja.lisaapata()
+
+                        break
+                for qkortti in self.peli.getqkortit_poyta():
+                    qkortti.clear()  # poistaa kortin ja pistää sen läpinäkyväks
+                    qkortti.setpixmapnone()
+                    qkortti.move(700, 500)
+
+                self.peli.laskepisteet()
+
+                suurin =0
+                for pelaaja in self.peli.return_pelaajat():
+                    if pelaaja.getpisteet() > suurin:
+                        suurin = pelaaja.getpisteet()
+                self.pistetaul = Qui_pisteet(self.peli,True)
+
+                if suurin > 15:
+                    QMessageBox.information(self, "Peli päättyi", "Onnittelut voittajalle. Lopeta peli")
+                else:
+                    if self.uusikierros is None:
+                        self.uusikierros = QPushButton("Aloita uusi kierros", self)
+                        self.uusikierros.clicked.connect(lambda: self.nollaa_kaikki())
+                        self.vbox.addWidget(self.uusikierros)
+                    else:
+                        self.uusikierros.show()
+
 
         else:
             self.statusBar().showMessage("Tee ensiksi siirto: Ota halutut kortit tai laita kortti pöytään")
+            self.timer.start()
+
+    def nollaa_kaikki(self):  #Nollaa kaiken kierroksen loputtua, ennen uuden alkua, ja asettaa turnin oikein
+        print("aa")
+        self.uusikierros.hide()
+        print("ss")
+        self.peli.nollaapelitiedot()  #Peli tietojen nollaus
+        x=0
+        print("ss")
+        for pelaaja in self.peli.return_pelaajat(): #Pelaajien tietojen lopetus
+
+            if pelaaja.getjakaja() is True:
+                pelaaja.setjakajafalse()
+                turn = x
+
+            pelaaja.nollaatiedot()
+            x+=1
+        print(turn)
+        pelaajat=self.peli.return_pelaajat()
+        pelaajat[turn+1].setjakajatrue()
+
+        self.peli.nollaapelitiedot()
+
+        self.peli.asetavuoro(turn)  #asettaa seuraavan pelaajan jakajaksi
+
+        self.peli.nollaakorttiqui() # luodaan siten täysin uudet quicardit
+
+        self.peli.aloita_peli()
+
+        self.updatequi()
         self.timer.start()
     def takecard(self):  #Käy läpi uusiksi rauhassa
 
@@ -223,6 +306,7 @@ class GUI_aloitus(QMainWindow):
                 if qkortti.getklikattu() == 1:
                     kasiq = qkortti
 
+
             for qkortti in self.peli.getqkortit_poyta():
                 if qkortti.getklikattu() == 1:
                     uusi = qkortti.getkortti()
@@ -231,6 +315,7 @@ class GUI_aloitus(QMainWindow):
 
             if len(vara)>0 and kasiq is not None:
                 kasi = kasiq.getkortti()
+
                 ok = self.peli.laske_oikein(vara,kasi)
 
                 if ok is False:
@@ -238,6 +323,10 @@ class GUI_aloitus(QMainWindow):
                 else:
                     self.statusBar().showMessage("Pelaajan {} siirto tehty, "
                                                  "paina seuraava vuoro".format(pelaaja.return_name()))
+                    for pelaaja1 in self.peli.return_pelaajat():
+                        pelaaja1.setvikafalse()
+                    pelaaja.setvikatrue()
+
                     for qkortti in quip:
                         qkortti.setklikattu0()
                         kortti = qkortti.getkortti()
@@ -263,24 +352,22 @@ class GUI_aloitus(QMainWindow):
                     pelaaja.poistaqkortti(kasiq)
                     pelaaja.pelaa_kortti(kasiq.getkortti())
                     pelaaja.lisaa_kortti()
-                    kasiq.clear()
-                    kasiq.setpixmapnone()
-                    kasiq.move(700, 500)
 
                     self.peli.lisaakorttipelaajalle()
-                    if kortti.get_arvo() == 14:
+                    if kasiq.getkortti().get_arvo() == 14:
                         pelaaja.lisaaassa()
-                    if kortti.get_arvo() == 2 and kortti.get_maa() == "Pata":
+                    if kasiq.getkortti().get_arvo() == 2 and kasiq.getkortti().get_maa() == "Pata":
                         pelaaja.lisaapata2()
-                    if kortti.get_arvo() == 10 and kortti.get_maa() == "Ruutu":
+                    if kasiq.getkortti().get_arvo() == 10 and kasiq.getkortti().get_maa() == "Ruutu":
                         pelaaja.lisaaruutu10()
-                    if kortti.get_maa()=="Pata":
+                    if kasiq.getkortti().get_maa() == "Pata":
+
                         pelaaja.lisaapata()
                     if len(self.peli.getqkortit_poyta()) == 0:
                         pelaaja.lisaa_mokki()
-
-
-
+                    kasiq.clear()
+                    kasiq.setpixmapnone()
+                    kasiq.move(700, 500)
                     pelaaja.setpelattutrue()
             else:
                 self.statusBar().showMessage("Valitse yksi kortti kädestä ja halutut kortit pöydältä")
@@ -293,20 +380,23 @@ class GUI_aloitus(QMainWindow):
         x=0
 
         pelaaja = self.peli.get_turn_pelaaja()
-        if pelaaja.getpelattu() is False and len(pelaaja.getqkortit_kasi()) >0:
-            for qkortti in pelaaja.getqkortit_kasi():
-                if qkortti.getklikattu() == 1:
-                    kortti = qkortti.getkortti()
-                    qkortti.setklikattu0()
-                    self.peli.lisaaqkorttipoyta(qkortti)
-                    pelaaja.poistaqkortti(qkortti)
-                    self.peli.pelaa_kortin_poytaan(kortti)
-                    pelaaja.setpelattutrue()
-                    x=0
-                    self.statusBar().showMessage("Pelaajan {} siirto tehty".format(pelaaja.return_name()))
-                    break
-                else:
-                    x=1
+        if pelaaja.getpelattu() is False:
+            if len(self.peli.getqkortit_poyta())>9:
+                QMessageBox.warning(self, "Pöytä täynnä", "Pöytä täynnä, et pelaa fiksusti")
+            else:
+                for qkortti in pelaaja.getqkortit_kasi():
+                    if qkortti.getklikattu() == 1:
+                        kortti = qkortti.getkortti()
+                        qkortti.setklikattu0()
+                        self.peli.lisaaqkorttipoyta(qkortti)
+                        pelaaja.poistaqkortti(qkortti)
+                        self.peli.pelaa_kortin_poytaan(kortti)
+                        pelaaja.setpelattutrue()
+                        x=0
+                        self.statusBar().showMessage("Pelaajan {} siirto tehty".format(pelaaja.return_name()))
+                        break
+                    else:
+                        x=1
 
         else:
             self.statusBar().showMessage("Pelaajan {} vuoro päättynyt, "
@@ -337,9 +427,9 @@ class GUI_aloitus(QMainWindow):
         qkortitkasi = pelaaja.getqkortit_kasi()
         for qkortti in qkortitpoyta:
             if qkortti.getklikattu() == 0:
-                qkortti.move(-200 + 150 * y, 75)
+                qkortti.move(-250 + 125 * y, 75)
             else:
-                qkortti.move(-200 + 150 * y, 50)
+                qkortti.move(-250 + 125 * y, 50)
             y += 1
         x=0
         for qkortti1 in qkortitkasi:
@@ -367,12 +457,12 @@ class GUI_aloitus(QMainWindow):
                 kortti1.avaakortti()
                 self.peli.lisaaqkorttipoyta(kortti1)
                 self.scene.addWidget(kortti1)
-                kortti1.move(-200 + 150 * x, 75)
+                kortti1.move(-300 + 125 * x, 75)
             x+=1
         ####################### pöytä
-        if len(kasikortit) == 0:  #peli loppuu
-            print("Peli loppui")
-            self.loppu = Qui_pisteet()
+        if len(kasikortit) == 0 :  #peli loppuu
+            print("Peli2 loppui")
+            pass
         elif len(qkortitkasi) == 0:  #ei luotoja qui card olioita, eka alustus
             x=0
             for kortti in kasikortit:
@@ -413,15 +503,23 @@ class GUI_aloitus(QMainWindow):
 
         self.start_button = QPushButton("Start new game")
         self.start_button.clicked.connect(lambda: self.start())
-        self.start_button.adjustSize()
-        self.start_button.setStyleSheet("color: black; background: yellow")
+
+        self.start_button.setStyleSheet("color: black; background: orange")
+        self.start_button.setFixedHeight(75)
+        self.start_button.setFixedWidth(200)
+
         self.vbox.addWidget(self.start_button)
 
+
+
         self.load_button = QPushButton("Load game", self)
-        self.load_button.setStyleSheet("color: black; background: yellow")
+        self.load_button.setStyleSheet("color: black; background: orange")
         self.load_button.clicked.connect(lambda: self.load_game())
-        self.load_button.adjustSize()
+        self.load_button.setFixedHeight(75)
+        self.load_button.setFixedWidth(200)
+        self.horizontal.addWidget(self.load_button)
         self.vbox.addWidget(self.load_button)
+
 
     def _init_window(self): #alkunäyttö
 
@@ -432,13 +530,202 @@ class GUI_aloitus(QMainWindow):
         self.setGeometry(0, 0, 1300, 900)
         self.setWindowTitle("Kasino")
         self.init_buttons()
-        #self.setStyleSheet("background-image: url(kuvat/tausta.jpg)")
+        self.setStyleSheet("background-image: url(kuvat/tausta.jpg)")
         self.show()
 
-    def save_game(self):
-        pass
+    def save_game(self):  #tallentaa pelin tiedot
+        if self.peli == None:
+            QMessageBox.warning(self, "Ei pelaajia", "Aloita peli ensin")
+        else:
+            text, ok = QInputDialog.getText(self, "Tallennus", "Anna tallennus tiedoston nimi:")
+            teksti = text.strip()
+            if ok is True and len(teksti) >0:
+                tiedosto = open("{}.txt".format(teksti), "w")
+                tiedosto.write("#pelaajat pelissa:\n")
+                for pelaaja in self.peli.return_pelaajat():  #pelaajien nimet
+                    nimi=pelaaja.return_name()
+                    tiedosto.write(nimi)
+                    tiedosto.write("\n")
+                tiedosto.write("#kortit pakassa:\n")
+                pakka = self.peli.get_pakka()
+                for kortti in pakka.getkortit():
+                    tiedosto.write("{} {}\n".format(kortti.get_maa(), kortti.get_arvo()))
+                tiedosto.write("#kortit poydalla:\n") #kortit pöydällä
+                for kortti in self.peli.get_poyta():
+                    tiedosto.write("{} {}\n".format(kortti.get_maa(), kortti.get_arvo()))
+                tiedosto.write("#pelin tiedot:\n")
+                tiedosto.write("{}\n".format(self.peli.get_vuoro()))
+                tiedosto.write("#pelaajien tiedot\n")
+                for pelaaja in self.peli.return_pelaajat():  #kaikkien pelaajien tiedot
+                    tiedosto.write("# {} {}\n".format(pelaaja.return_name(), len(pelaaja.get_kasi())))
+                    for kortti in pelaaja.get_kasi():  #pelaajan x kortit kädessä
+                        tiedosto.write("{} {}\n".format(kortti.get_maa(), kortti.get_arvo()))
+                    tiedosto.write("{}\n".format(pelaaja.getpisteet())) #pisteet
+                    tiedosto.write("{}\n".format(pelaaja.getjakaja())) #onko jakaja
+                    tiedosto.write("{}\n".format(pelaaja.getkortit())) #saadut kortit
+                    tiedosto.write("{}\n".format(pelaaja.getassat())) #saadut assat
+                    tiedosto.write("{}\n".format(pelaaja.getpadat())) #saadut padat
+                    tiedosto.write("{}\n".format(pelaaja.getmokit())) #saadut mokit
+                    tiedosto.write("{} pata2\n".format(pelaaja.getpata2())) #onko pata2
+                    tiedosto.write("{} ruutu10\n".format(pelaaja.getruutu10())) #onko ruutu10
+                    tiedosto.write("{} onko vuoro päättynyt\n".format(pelaaja.getpelattu()))  #onko vuoro päättynyt
+                    tiedosto.write("{} onko saanut kortteja viimeksi\n".format(pelaaja.getvika()))
+                    #onko saanut vikana kortteja
+
+                tiedosto.close()
+                QMessageBox.information(self, "Tallennus", "Peli tallennettu tiedostoon {}.txt".format(teksti))
+
+            else:
+                QMessageBox.information(self, "Tallennus", "Tallennus tiedoston nimi ei kelpaa\ntai painoit cancel")
+
+
     def load_game(self):
-        pass
+        text, ok = QInputDialog.getText(self, "Lataaminen", "Anna ladattavan tiedoston nimi:")
+
+        if ok is True:
+            teksti = text.strip()
+            try:  #onko peli olemassa
+                tekst="{}.txt".format(teksti)
+                tiedosto = open(tekst, "r")  #avaa tiedoston
+                rivi = tiedosto.readline()  #ekana turha rivi
+
+                self.peli = Pelikentta(False) #luo uuden pelin minne lisätään pelaajat, pakka aluksi tyhjä
+                while len(rivi)>0:
+                    rivi = rivi.strip()
+                    if rivi == "#pelaajat pelissa:":
+                        rivi = tiedosto.readline()
+                        while rivi[0] != '#' and len(rivi)>0:  #ekana pelaajat pelissä
+                            nimi = rivi.strip()
+                            self.peli.lisaa_pelaaja(nimi)
+
+                            rivi = tiedosto.readline()
+                    elif rivi == "#kortit pakassa:":  #lisätään kortit pakkaan
+                        maat = {"Hertta": Kortti.Hertta, "Ruutu": Kortti.Ruutu, "Pata": Kortti.Pata,
+                                "Risti": Kortti.Risti}
+                        rivi = tiedosto.readline()
+
+                        while rivi[0] != '#':
+                            maa, arvo2 = rivi.split(" ")
+                            maa=maa.strip()
+                            arvo2 = arvo2.strip()
+                            arvo = int(arvo2)
+                            kortti = Kortti(maat[maa], arvo)
+
+                            self.peli.pakka.lisaakortti(kortti)
+                            rivi = tiedosto.readline()
+
+                    elif rivi == "#kortit poydalla:":  #lisätään kortit pöytään
+                        print("jee")
+                        rivi = tiedosto.readline()
+                        while rivi[0] != '#':
+                            maa, arvo2 = rivi.split(" ")
+                            maa = maa.strip()
+                            arvo2 = arvo2.strip()
+                            arvo = int(arvo2)
+                            kortti = Kortti(maat[maa], arvo)
+                            self.peli.lisaa_kortti_poytaan(kortti)
+                            rivi = tiedosto.readline()
+                        print(len(self.peli.get_poyta()))
+                    elif rivi == "#pelin tiedot:":
+                        rivi = tiedosto.readline()
+                        vuoro = rivi.strip()
+                        self.peli.asetavuoro(int(vuoro))
+                        print(vuoro)
+                        rivi = tiedosto.readline()
+                    elif rivi == "#pelaajien tiedot":
+                        rivi = tiedosto.readline()
+                        for pelaaja in self.peli.return_pelaajat():
+                            turha,nimi,kortit = rivi.split(" ")
+                            kortit = kortit.strip()
+                            kortit = int(kortit)
+                            if nimi.strip() == pelaaja.return_name():  #vain varmistus että oikein
+                                rivi = tiedosto.readline()
+
+                                x=0
+                                while x<kortit:
+
+                                    maa, arvo2 = rivi.split(" ")
+                                    maa = maa.strip()
+                                    arvo2 = arvo2.strip()
+                                    arvo = int(arvo2)
+                                    kortti = Kortti(maat[maa], arvo)
+                                    pelaaja.lisaa_kortti_kateen(kortti)
+                                    rivi = tiedosto.readline()
+                                    x+=1
+                                print(len(pelaaja.get_kasi()))
+
+                                pisteet = rivi.strip()
+                                pisteet = int(pisteet)
+                                pelaaja.lisaapisteet(pisteet) #pisteet
+
+                                rivi = tiedosto.readline()  # onko jakaja
+                                jakaja = rivi.strip()
+                                if jakaja == "True":
+                                    pelaaja.setjakajatrue()
+
+
+                                rivi = tiedosto.readline() #saadut kortit
+                                rivi = rivi.strip()
+                                saakortit = int(rivi)
+                                pelaaja.lisaakortit(saakortit)
+
+                                rivi = tiedosto.readline() #saadut assat
+                                rivi = rivi.strip()
+                                assat = int(rivi)
+                                pelaaja.lisaaassat(assat)
+
+                                rivi = tiedosto.readline()  # saadut padat
+                                rivi = rivi.strip()
+                                padat = int(rivi)
+                                pelaaja.lisaapadat(padat)
+
+                                rivi = tiedosto.readline()  # saadut mokit
+                                rivi = rivi.strip()
+                                mokit = int(rivi)
+                                pelaaja.lisaamokit(mokit)
+                                rivi = tiedosto.readline()  # onko pata2
+                                rivi = rivi.split(" ")
+                                rivi[0] = rivi[0].strip()
+                                if rivi[0] == "True":
+                                    pelaaja.lisaapata2()
+                                rivi = tiedosto.readline()  # onko ruutu10
+                                rivi = rivi.split(" ")
+                                rivi[0] = rivi[0].strip()
+                                if rivi[0] == "True":
+                                    pelaaja.lisaaruutu10()
+                                rivi = tiedosto.readline()# onko pelattu true
+                                rivi = rivi.split(" ")
+                                rivi[0] = rivi[0].strip()
+                                if rivi[0] == "True":
+                                    print("ok")
+                                    pelaaja.setpelattutrue()
+                                rivi = tiedosto.readline()  # onko vika true
+                                rivi = rivi.split(" ")
+                                rivi[0] = rivi[0].strip()
+                                if rivi[0] == "True":
+                                    print("jee")
+                                    pelaaja.setvikatrue()
+                                rivi = tiedosto.readline()
+                            else:
+                                print("wtf")
+
+                self.start_button.hide()  # Piilotetaan buttonit ja lisätään uusi näyttö
+                self.load_button.hide()
+                self.newGui()
+                self.updatequi()
+                self.timer = QtCore.QTimer()  # jotta ei tarvitse päivittää käyttöliittymää klikkauksille
+                self.timer.timeout.connect(lambda: self.timerklikkaus())
+                self.timer.start(100)
+
+
+            except OSError:
+                QMessageBox.warning(self, "Väärä tiedosto", "Tiedoston nimellä {}.txt \n ei löytynyt tallennettua"
+                                                            "peliä".format(teksti))
+        else:
+            QMessageBox.information(self, "Cancel", "Suljit lataa peli ikkunan")
+
+
+
 
 
 

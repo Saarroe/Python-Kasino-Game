@@ -26,5 +26,7 @@ class Kortti():
     def set_quitrue(self): #joko true tai false
         self.onkoqui = True
 
+    def set_guifalse(self):
+        self.onkoqui = False
     def get_qui(self):
         return self.onkoqui

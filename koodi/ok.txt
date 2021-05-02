@@ -1,0 +1,73 @@
+#pelaajat pelissa:
+s
+d
+#kortit pakassa:
+Hertta 10
+Ruutu 11
+Ruutu 2
+Hertta 6
+Hertta 11
+Pata 11
+Hertta 8
+Hertta 13
+Pata 7
+Ruutu 10
+Pata 9
+Ruutu 13
+Hertta 2
+Risti 10
+Risti 2
+Ruutu 3
+Risti 9
+Risti 8
+Hertta 12
+Risti 7
+Hertta 3
+Hertta 9
+Pata 4
+Pata 8
+Pata 6
+Pata 2
+Ruutu 12
+Hertta 14
+Ruutu 4
+Pata 14
+Hertta 5
+Ruutu 14
+#kortit poydalla:
+Ruutu 8
+Risti 4
+Ruutu 5
+#pelin tiedot:
+1
+#pelaajien tiedot
+# s 4
+Ruutu 9
+Risti 5
+Pata 3
+Risti 14
+0
+True
+0
+0
+0
+0
+False pata2
+False ruutu10
+False onko vuoro p‰‰ttynyt
+False onko saanut kortteja viimeksi
+# d 4
+Pata 12
+Ruutu 6
+Ruutu 7
+Risti 12
+0
+False
+9
+0
+3
+0
+False pata2
+False ruutu10
+True onko vuoro p‰‰ttynyt
+True onko saanut kortteja viimeksi

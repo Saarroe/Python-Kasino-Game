@@ -3,15 +3,18 @@ from Pelaaja import Player
 
 class Pelikentta():
 
-    def __init__(self):
-        self.pakka = Korttipakka()  #sekoitetun korttipakka pituus 52
+    def __init__(self,x):
+        self.pakka = Korttipakka(x)  #sekoitetun korttipakka pituus 52, true kun eka init
         self.pelaajaa_lista = []
         self.turn = 0 #kenen vuoro
         self.poyta = []
-        self.x=0 #on nolla jos pakassa on vielä kortteja
+
         self.qkortit_poyta = []
 
 
+
+    def asetavuoro(self, x):
+        self.turn = x
     def lisaaqkorttipoyta(self,kortti):
         self.qkortit_poyta.append(kortti)
 
@@ -53,11 +56,13 @@ class Pelikentta():
         return self.pakka
 
     def aloita_peli(self):
+
         for x in range(0,4):
+
             for pelaaja in self.return_pelaajat():
                 kortti = self.pakka.nosta_kortti()
+
                 pelaaja.lisaa_kortti_kateen(kortti)
-                pelaaja.nollaa_mokit()
         #for i in range(0,4):
             kortti = self.pakka.nosta_kortti()
             self.lisaa_kortti_poytaan(kortti)
@@ -68,7 +73,7 @@ class Pelikentta():
             kortti = self.pakka.nosta_kortti()
             pelaaja.lisaa_kortti_kateen(kortti)
         else:
-            print("pakka loppui")
+            pass
 
     def laske_oikein(self, poyta, kasi):
         #False jos määrä ei täsmää muuten True jos siirto ok
@@ -113,7 +118,7 @@ class Pelikentta():
         self.poyta.append(kortti)
 
         if len(self.pakka.getkortit()) == 0:
-            print("pakka loppui")
+            pass
 
         else:
             kortti = self.pakka.nosta_kortti()
@@ -124,13 +129,7 @@ class Pelikentta():
         pelaaja = self.get_turn_pelaaja()
         qkorttikasi = pelaaja.getqkortit_kasi()
 
-        #print(qkortti.getkortti().get_arvo())
-        #print("Käsi:")
-        #for x in qkorttikasi:
-        #    print(x.getkortti().get_arvo())
-        #print("Pöytä")
-       # for y in self.getqkortit_poyta():
-        #    print(y.getkortti().get_arvo())
+
         if qkortti.getvisibility() is True and pelaaja.getpelattu() == False:
             if qkortti in self.qkortit_poyta:  #True jos kortti pöydässä, kädessä False
 
@@ -156,36 +155,66 @@ class Pelikentta():
 
     def enitenkortteja(self):  #Piste kellä eniten kortteja
         suurin = 0
+        haluttu = None
         for pelaaja in self.pelaajaa_lista:
             korttimaara = pelaaja.getkortit()
+
             if korttimaara > suurin:
                 suurin= korttimaara
                 haluttu = pelaaja
-        haluttu.lisaapiste()
+
+        if haluttu != None:
+            haluttu.lisaapiste()
 
     def enitenpatoja(self):  #kaksi pistettä kellä eniten patoja
         suurin = 0
+        haluttu = None
         for pelaaja in self.pelaajaa_lista:
             padat = pelaaja.getpadat()
             if padat > suurin:
                 suurin = padat
                 haluttu = pelaaja
-        haluttu.lisaapiste()
-        haluttu.lisaapiste()
+        if haluttu != None:
+            haluttu.lisaapiste()
+            haluttu.lisaapiste()
 
     def muutpisteet(self):
+
         for pelaaja in self.pelaajaa_lista:
-            for piste in range(len(pelaaja.getassat())):  # pisteet ässistä
+
+            for piste in range(pelaaja.getassat()):  # pisteet ässistä
+
                 pelaaja.lisaapiste()
-            for piste in range(len(pelaaja.getmokit())): # Pisteet mökeistä
+            for piste in range(pelaaja.getmokit()):  # Pisteet mökeistä
+
                 pelaaja.lisaapiste()
+
             if pelaaja.getpata2() is True:  # Piste pata2
                 pelaaja.lisaapiste()
             if pelaaja.getruutu10() is True: # 2 pistettä ruutu10
                 pelaaja.lisaapiste()
                 pelaaja.lisaapiste()
+            else:
+                pass
+
+
 
     def laskepisteet(self):
+
         self.enitenkortteja()
         self.enitenpatoja()
         self.muutpisteet()
+
+    def nollaapelitiedot(self):
+        self.pakka = Korttipakka(True)
+
+        self.turn = 0  # kenen vuoro
+
+        self.poyta = []
+
+        self.qkortit_poyta = []
+
+
+    def nollaakorttiqui(self):
+        for kortti in self.pakka.getkortit():
+            kortti.set_guifalse()

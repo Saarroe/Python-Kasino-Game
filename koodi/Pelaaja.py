@@ -3,6 +3,8 @@
 class Player():
 
     def __init__(self,nimi):
+        self.vika = False
+        self.jakaja = False
         self.nimi = nimi
         self.kasi = []
         self.qkasi = []
@@ -15,14 +17,48 @@ class Player():
         self.ruutu10 = False
         self.pelattu = False #false jos ei ole vielä pelannut vuoroa
 
+    def getjakaja(self):
+        return self.jakaja
+
+    def setjakajatrue(self):
+        self.jakaja = True
+
+    def setjakajafalse(self):
+        self.jakaja = False
+
+    def setvikatrue(self):
+        self.vika = True
+    def setvikafalse(self):
+        self.vika = False
+
+    def getvika(self):
+        return self.vika
+
     def lisaapiste(self):
         self.pisteet+=1
+
+    def lisaapisteet(self,x):
+        self.pisteet=x
 
     def getpisteet(self):
         return self.pisteet
 
+    def nollaatiedot(self):
+        self.mokit = 0
+        self.kasi = []
+        self.qkasi = []
+        self.saadut_kortit = 0
+        self.mokit = 0
+        self.padat = 0
+        self.assat = 0
+        self.pata2 = False
+        self.ruutu10 = False
+        self.pelattu = False
+
     def nollaaqkasi(self):
         self.qkasi = []
+        self.kasi = []
+
     def lisaaqkortti(self,kortti):
         self.qkasi.append(kortti)
 
@@ -77,11 +113,17 @@ class Player():
     def getkortit(self):
         return self.saadut_kortit
 
+    def lisaakortit(self, x):
+        self.saadut_kortit = x
+    def lisaaassat(self, x):
+        self.assat = x
+    def lisaapadat(self,x):
+        self.padat = x
+    def lisaamokit(self, x):
+        self.mokit = x
+
     def lisaa_mokki(self):
         self.mokit+=1
-
-    def nollaa_mokit(self):
-        self.mokit=0
 
     def getmokit(self):
         return self.mokit

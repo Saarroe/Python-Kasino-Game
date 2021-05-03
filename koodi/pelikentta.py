@@ -89,12 +89,11 @@ class Pelikentta():
             arvo=kortti.get_arvo()
             if arvo == 14:
                 arvo = 1
-            if arvo != arvo2:
-                summa1 += arvo
-            if summa1 == arvo2:
-                summa1=0
 
-        if summa1 == arvo2 or summa1 == 0:
+            summa1 += arvo
+
+
+        if summa1%arvo2 == 0:  #kun jakojäännös 0 niin menee oikein
             return True
         elif summa1 >arvo2:
             pass

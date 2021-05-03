@@ -161,6 +161,8 @@ class Pelikentta():
             if korttimaara > suurin:
                 suurin= korttimaara
                 haluttu = pelaaja
+            elif korttimaara == suurin:
+                haluttu = None
 
         if haluttu != None:
             haluttu.lisaapiste()
@@ -173,6 +175,8 @@ class Pelikentta():
             if padat > suurin:
                 suurin = padat
                 haluttu = pelaaja
+            elif padat == suurin:
+                haluttu = None
         if haluttu != None:
             haluttu.lisaapiste()
             haluttu.lisaapiste()

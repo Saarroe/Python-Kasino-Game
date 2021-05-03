@@ -1,80 +1,44 @@
 #pelaajat pelissa:
-w
-e
+Matias
+Niko
 #kortit pakassa:
-Risti 13
-Pata 5
-Pata 4
-Pata 2
-Risti 11
-Pata 6
-Ruutu 7
-Risti 8
-Risti 6
-Pata 3
-Pata 8
-Hertta 9
-Risti 14
-Hertta 7
-Ruutu 10
-Hertta 11
-Pata 11
-Hertta 3
-Risti 3
-Risti 9
-Hertta 6
-Hertta 12
-Ruutu 3
-Risti 10
-Hertta 2
-Risti 4
-Ruutu 14
-Ruutu 8
-Hertta 10
-Risti 2
-Ruutu 4
-Hertta 5
-Pata 7
-Ruutu 5
-Pata 13
-Hertta 14
-Pata 9
 #kortit poydalla:
-Pata 14
-Hertta 4
-Ruutu 2
-Pata 10
-Risti 12
-#pelin tiedot:
-0
-#pelaajien tiedot
-# w 4
-Ruutu 12
 Hertta 8
-Pata 12
-Ruutu 9
+Risti 10
+Hertta 6
+Pata 7
+Pata 4
+Hertta 5
+#pelin tiedot:
+1
+#pelaajien tiedot
+# Matias 4
+Risti 9
+Hertta 13
+Hertta 14
+Ruutu 3
 0
 True
-0
-0
-0
-0
+18
+1
+7
+1
 False pata2
-False ruutu10
-True onko vuoro p‰‰ttynyt
+True ruutu10
+False onko vuoro p‰‰ttynyt
 False onko saanut kortteja viimeksi
-# e 4
-Risti 5
-Risti 7
-Ruutu 11
-Ruutu 6
+# Niko 4
+Pata 8
+Ruutu 14
+Hertta 10
+Hertta 11
 0
 False
-2
-0
-0
-0
-False pata2
+20
+1
+3
+3
+True pata2
 False ruutu10
-False onko vuoro p‰‰ttynyt
+True onko vuoro p‰‰ttynyt
 True onko saanut kortteja viimeksi

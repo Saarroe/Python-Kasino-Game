@@ -1,8 +1,9 @@
 #Käyttöliittymä
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QInputDialog, QMessageBox, QAction
 from PyQt5.QtWidgets import QLabel
 from pelikentta import Pelikentta
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaPlaylist, QMediaContent
 from Pelaaja import Player
 from Qui_card import Qui_card
 from Qui_pisteet import Qui_pisteet
@@ -30,6 +31,7 @@ class GUI_aloitus(QMainWindow):
         self.fileMenu = menubar.addMenu('&Lopeta')
         self.pisteMenu = menubar.addMenu('&Pistetaulukko')
         self.saveMenu = menubar.addMenu('&Tallenna peli')
+        self.musiikki = menubar.addMenu('&Musiikki')
 
         self.fileMenu.addAction(self.exitAct)
 
@@ -41,6 +43,29 @@ class GUI_aloitus(QMainWindow):
         self.tallennus = QAction('&Tallennetaan peli')
         self.tallennus.triggered.connect(lambda: self.save_game())
         self.saveMenu.addAction(self.tallennus)
+
+#Musiikin teko
+        self.sound = QMediaPlayer()
+        self.playlist = QMediaPlaylist()
+        self.playlist.addMedia(QMediaContent(QtCore.QUrl.fromLocalFile("musiikki/bensound-sunny.mp3")))
+        self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
+        self.sound.setPlaylist(self.playlist)
+        self.sound.play()
+        self.sound.setMuted(True)
+
+        self.music = QAction('&Musiikki')
+        self.music.setCheckable(True)
+        self.music.setChecked(False)
+        self.music.triggered.connect(lambda: self.setmusic())
+        self.musiikki.addAction(self.music)
+
+    def setmusic(self):  #Asettaa musiikin päälle tai pois
+        if self.sound.isMuted():
+            self.sound.setMuted(False)
+
+        else:
+            self.sound.setMuted(True)
+
     def pistetaulukko(self):
         if self.peli != None:
 
@@ -56,7 +81,7 @@ class GUI_aloitus(QMainWindow):
 
             try:
                 count = int(count)
-                if count < 2 or count >9:
+                if count < 2 or count >6:
                     pass
                 else:
                     return count
@@ -64,7 +89,6 @@ class GUI_aloitus(QMainWindow):
                 QMessageBox.information(self, "Väärä luku", "Anna luku väliltä 2-6")
 
     def newplayer(self,x):
-
 
         text, ok = QInputDialog.getText(self, "Pelaaja", "Lisää uusi pelaaja\n{}. Pelaajan nimi:".format(x))
         text= text.strip()
@@ -75,6 +99,8 @@ class GUI_aloitus(QMainWindow):
             for pelaaja in self.peli.return_pelaajat():
                 if str(text) == pelaaja.return_name():
                     return False
+        if len(text)>10:
+            text = text[0:10]
         self.peli.lisaa_pelaaja(str(text))
         self.statusBar().showMessage("Pelaaja {} lisättiin onnistuneesti".format(text))
         return True
@@ -137,9 +163,12 @@ class GUI_aloitus(QMainWindow):
         teksti=pelaaja.return_name()
 
         self.nimi = QLabel(teksti)
-        self.nimi.setStyleSheet("background-image: url(kuvat/board.jpg); font-size 50px")
-        self.nimi.setFixedWidth(175)
-        self.nimi.setFixedHeight(25)
+        #self.nimi.setStyleSheet("background-image: url(kuvat/board.jpg); font-size 50px")
+        self.nimi.setStyleSheet("background: green")
+        self.nimi.setFixedWidth(200)
+        self.nimi.setFixedHeight(30)
+        self.nimi.setAlignment(QtCore.Qt.AlignCenter)
+        self.nimi.setFont(QtGui.QFont("Arial", 15))
         self.scene.addWidget(self.nimi)
         self.nimi.move(160,670)
 
@@ -160,12 +189,13 @@ class GUI_aloitus(QMainWindow):
         self.pakkalaskuri= QLabel()
         self.scene.addWidget(self.pakkalaskuri)
         self.pakkalaskuri.move(650,425)
-        self.pakkalaskuri.setStyleSheet("background-image: url(kuvat/board.jpg)")
+        self.pakkalaskuri.setStyleSheet("background: green")
         self.pakkalaskuri.setFixedWidth(100)
         self.pakkalaskuri.setFixedHeight(30)
-        #self.setStyleSheet("Background: transparent")
+
         self.setStyleSheet("background: green")
 
+        self.pakkalaskuri.setAlignment(QtCore.Qt.AlignCenter)
         self.view.show()
 
     def newbuttons(self):
@@ -260,6 +290,7 @@ class GUI_aloitus(QMainWindow):
                 else:
                     if self.uusikierros is None:
                         self.uusikierros = QPushButton("Aloita uusi kierros", self)
+                        self.uusikierros.setStyleSheet("color: black; background: orange")
                         self.uusikierros.clicked.connect(lambda: self.nollaa_kaikki())
                         self.vbox.addWidget(self.uusikierros)
                     else:
@@ -271,12 +302,12 @@ class GUI_aloitus(QMainWindow):
             self.timer.start()
 
     def nollaa_kaikki(self):  #Nollaa kaiken kierroksen loputtua, ennen uuden alkua, ja asettaa turnin oikein
-        print("aa")
+
         self.uusikierros.hide()
-        print("ss")
+
         self.peli.nollaapelitiedot()  #Peli tietojen nollaus
         x=0
-        print("ss")
+
         for pelaaja in self.peli.return_pelaajat(): #Pelaajien tietojen lopetus
 
             if pelaaja.getjakaja() is True:
@@ -285,13 +316,13 @@ class GUI_aloitus(QMainWindow):
 
             pelaaja.nollaatiedot()
             x+=1
-        print(turn)
+
         pelaajat=self.peli.return_pelaajat()
         pelaajat[turn+1].setjakajatrue()
 
         self.peli.nollaapelitiedot()
 
-        self.peli.asetavuoro(turn)  #asettaa seuraavan pelaajan jakajaksi
+        self.peli.asetavuoro(turn+1)  #asettaa seuraavan pelaajan jakajaksi
 
         self.peli.nollaakorttiqui() # luodaan siten täysin uudet quicardit
 
@@ -466,7 +497,7 @@ class GUI_aloitus(QMainWindow):
             x+=1
         ####################### pöytä
         if len(kasikortit) == 0 :  #peli loppuu
-            print("Peli2 loppui")
+
             pass
         elif len(qkortitkasi) == 0:  #ei luotoja qui card olioita, eka alustus
             x=0
@@ -620,7 +651,7 @@ class GUI_aloitus(QMainWindow):
                             rivi = tiedosto.readline()
 
                     elif rivi == "#kortit poydalla:":  #lisätään kortit pöytään
-                        print("jee")
+
                         rivi = tiedosto.readline()
                         while rivi[0] != '#':
                             maa, arvo2 = rivi.split(" ")
@@ -630,12 +661,12 @@ class GUI_aloitus(QMainWindow):
                             kortti = Kortti(maat[maa], arvo)
                             self.peli.lisaa_kortti_poytaan(kortti)
                             rivi = tiedosto.readline()
-                        print(len(self.peli.get_poyta()))
+
                     elif rivi == "#pelin tiedot:":
                         rivi = tiedosto.readline()
                         vuoro = rivi.strip()
                         self.peli.asetavuoro(int(vuoro))
-                        print(vuoro)
+
                         rivi = tiedosto.readline()
                     elif rivi == "#pelaajien tiedot":
                         rivi = tiedosto.readline()
@@ -657,7 +688,7 @@ class GUI_aloitus(QMainWindow):
                                     pelaaja.lisaa_kortti_kateen(kortti)
                                     rivi = tiedosto.readline()
                                     x+=1
-                                print(len(pelaaja.get_kasi()))
+
 
                                 pisteet = rivi.strip()
                                 pisteet = int(pisteet)
@@ -702,17 +733,17 @@ class GUI_aloitus(QMainWindow):
                                 rivi = rivi.split(" ")
                                 rivi[0] = rivi[0].strip()
                                 if rivi[0] == "True":
-                                    print("ok")
+
                                     pelaaja.setpelattutrue()
                                 rivi = tiedosto.readline()  # onko vika true
                                 rivi = rivi.split(" ")
                                 rivi[0] = rivi[0].strip()
                                 if rivi[0] == "True":
-                                    print("jee")
+
                                     pelaaja.setvikatrue()
                                 rivi = tiedosto.readline()
-                            else:
-                                print("wtf")
+                            else:  #ei pitäisi ikinä mennä, debuggaus
+                                print("Nyt jotain pahasti pielessä")
 
                 self.start_button.hide()  # Piilotetaan buttonit ja lisätään uusi näyttö
                 self.load_button.hide()
@@ -722,8 +753,7 @@ class GUI_aloitus(QMainWindow):
                 self.timer.timeout.connect(lambda: self.timerklikkaus())
                 self.timer.start(100)
 
-
-            except OSError:
+            except OSError:  #ei tiedostoa
                 QMessageBox.warning(self, "Väärä tiedosto", "Tiedoston nimellä {}.txt \n ei löytynyt tallennettua"
                                                             "peliä".format(teksti))
         else:

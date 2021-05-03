@@ -10,7 +10,7 @@ class Qui_pisteet(QWidget):
     def __init__(self, peli, x):
         super(Qui_pisteet, self).__init__()
        # self.setStyleSheet("background-image: url(kuvat/tausta.jpg)")
-        self.setStyleSheet("background: orange")
+        self.setStyleSheet("background-image: url(kuvat/testi.jpg)")
         self.loppu = x
         self.peli = peli
         self.setWindowTitle("Pistetaulukko")
@@ -25,27 +25,55 @@ class Qui_pisteet(QWidget):
 
         pelaajat = self.peli.return_pelaajat()
         self.taulukko = QGridLayout()
+
         self.taulukko.addWidget(QLabel("  Nimi"),0,0)
-        self.taulukko.addWidget(QLabel(),0,0)
         self.taulukko.addWidget(QLabel("  Kortit"),0, 1)
         self.taulukko.addWidget(QLabel("  Padat"),0, 2)
         self.taulukko.addWidget(QLabel("  Ässät"), 0, 3)
         self.taulukko.addWidget(QLabel("  Mökit"), 0, 4)
         self.taulukko.addWidget(QLabel("  Pata2"),0,5)
         self.taulukko.addWidget(QLabel("  Ruutu10"), 0, 6)
-        self.taulukko.addWidget(QLabel("  Pisteet"), 0, 7)  #Edellisiltä kierroksilta
+        piste=QLabel("Pisteet")
+        piste.setAlignment(QtCore.Qt.AlignCenter)
+        piste.setFont(QtGui.QFont("Arial", 10))
+
+        self.taulukko.addWidget(piste, 0, 7)  #Edellisiltä kierroksilta
         x=1
 
         for pelaaja in pelaajat:
             teksti="{}:".format(pelaaja.return_name())
-            self.taulukko.addWidget(QLabel(teksti), x, 0)
-            self.taulukko.addWidget(QLabel(str(pelaaja.getkortit())), x, 1)
-            self.taulukko.addWidget(QLabel(str(pelaaja.getpadat())), x, 2)
-            self.taulukko.addWidget(QLabel(str(pelaaja.getassat())), x, 3)
-            self.taulukko.addWidget(QLabel(str(pelaaja.getmokit())), x, 4)
-            self.taulukko.addWidget(QLabel(str(pelaaja.getpata2())), x, 5)
-            self.taulukko.addWidget(QLabel(str(pelaaja.getruutu10())), x, 6)
-            self.taulukko.addWidget(QLabel(str(pelaaja.getpisteet())), x, 7)
+            piste = QLabel(teksti)
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            self.taulukko.addWidget(piste, x, 0)
+
+            piste = QLabel(str(pelaaja.getkortit()))
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            self.taulukko.addWidget(piste, x, 1)
+
+            piste = QLabel(str(pelaaja.getpadat()))
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            self.taulukko.addWidget(piste, x, 2)
+
+            piste = QLabel(str(pelaaja.getassat()))
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            self.taulukko.addWidget(piste, x, 3)
+
+            piste = QLabel(str(pelaaja.getmokit()))
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            self.taulukko.addWidget(piste, x, 4)
+
+            piste = QLabel(str(pelaaja.getpata2()))
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            self.taulukko.addWidget(piste, x, 5)
+
+            piste = QLabel(str(pelaaja.getruutu10()))
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            self.taulukko.addWidget(piste, x, 6)
+
+            piste = QLabel(str(pelaaja.getpisteet()))
+            piste.setAlignment(QtCore.Qt.AlignCenter)
+            piste.setFont(QtGui.QFont("Arial", 15))
+            self.taulukko.addWidget(piste, x, 7)
             x+=1
 
         if self.loppu is True:
@@ -79,6 +107,8 @@ class Qui_pisteet(QWidget):
         else:
             teksti = QLabel("Pistetilanne tällä hetkellä:")
             voittaja = QLabel("Kierros vielä kesken!!")
+        voittaja.setAlignment(QtCore.Qt.AlignCenter)
+        teksti.setAlignment(QtCore.Qt.AlignCenter)
         self.vbox.addWidget(teksti)
         teksti.setFixedHeight(50)
         self.vbox.addLayout(self.taulukko)

@@ -555,19 +555,22 @@ class GUI_aloitus(QMainWindow):
         self.start_button = QPushButton("Aloita uusi peli")
         self.start_button.clicked.connect(lambda: self.start())
 
-        self.start_button.setStyleSheet("color: black; background: orange")
-        self.start_button.setFixedHeight(50)
-        self.start_button.setFixedWidth(150)
-
+        self.start_button.setStyleSheet("color: black; background: transparent; border-radius: 15px solid black;"
+                                        "font-size: 36px")
+        self.start_button.setFixedHeight(120)
+        self.start_button.setFixedWidth(250)
+        self.start_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.vbox.addWidget(self.start_button)
 
 
 
         self.load_button = QPushButton("Lataa peli", self)
-        self.load_button.setStyleSheet("color: black; background: orange")
+        self.load_button.setStyleSheet("color: black; background: transparent; border-radius: 15px solid black; "
+                                       "font-size: 36px")
+        self.load_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.load_button.clicked.connect(lambda: self.load_game())
-        self.load_button.setFixedHeight(50)
-        self.load_button.setFixedWidth(150)
+        self.load_button.setFixedHeight(120)
+        self.load_button.setFixedWidth(250)
         self.horizontal.addWidget(self.load_button)
         self.vbox.addWidget(self.load_button)
 

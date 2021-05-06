@@ -1,6 +1,8 @@
 from korttipakka import Korttipakka
 from Pelaaja import Player
 
+from itertools import combinations
+
 class Pelikentta():
 
     def __init__(self,x):
@@ -79,23 +81,80 @@ class Pelikentta():
         #False jos määrä ei täsmää muuten True jos siirto ok
         summa1=0
         arvo2=kasi.get_arvo()
-
         if kasi.get_maa() == "Ruutu" and arvo2 == 10:
             arvo2 = 16
         elif kasi.get_maa()== "Pata" and arvo2 == 2:
             arvo2 = 15
-
+        x=0
+        lista = []
         for kortti in poyta:
             arvo=kortti.get_arvo()
             if arvo == 14:
                 arvo = 1
+            if arvo == arvo2:
+                pass
+            elif arvo > arvo2:
+                return False
+            else:
+                lista.append(arvo)
+                summa1+=arvo
+                if summa1 == arvo2:
+                    summa1=0
 
-            summa1 += arvo
-
-        if summa1%arvo2 == 0:  #kun jakojäännös 0 niin menee oikein
+        if summa1 == 0:  #helpot pois algoritmistä
             return True
+
+        elif summa1%arvo2 == 0:  #ongelma tapaus
+            #ensiksi luodaan iterations toolin combinationin avulla lista sopivista yhdistelmistä
+            sopivat = []
+
+            for i in range(2,len(lista)+1):
+                kaikki = combinations(lista, i)
+
+                for uusi in kaikki:  #käy kaikki combinaatiot läpi mitkä jäljellä
+                    summa=0
+
+                    for alkio in uusi:
+
+                        summa+=alkio
+                    if summa == arvo2:
+                        sopivat.append(uusi) #nyt sopivissa ne kombot mitkä oikein
+
+            vika = []
+            for i in range(1, len(sopivat)+1):
+                uudet = combinations(sopivat, i)
+                for uusi in uudet:
+                    summa = 0
+                    for yhdistelma in uusi:
+                        summa += len(yhdistelma)
+
+                    if len(lista) == summa:
+                        vika.append(uusi)
+            oikeat = []
+            for yhdistelma in vika:
+                kortit = [0] * len(lista)
+                x=0
+                for kortti in lista:
+                    for alkio in yhdistelma:
+                        for jee in alkio:
+                            if jee == kortti:
+                                kortit[x]=1
+                    x+=1
+                loppu = True
+                for merkki in kortit:
+                    if merkki == 0:
+                        loppu=False
+                if loppu == True:
+                    oikeat.append(yhdistelma)
+            if len(oikeat)>0:
+                return True
+            else:
+                return False
+
         else:
             return False
+
+
 
 
 

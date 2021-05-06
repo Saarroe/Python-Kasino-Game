@@ -9,7 +9,7 @@ class Qui_pisteet(QWidget):
 
     def __init__(self, peli, x):
         super(Qui_pisteet, self).__init__()
-       # self.setStyleSheet("background-image: url(kuvat/tausta.jpg)")
+
         self.setStyleSheet("background-image: url(kuvat/testi.jpg)")
         self.loppu = x
         self.peli = peli
@@ -19,6 +19,8 @@ class Qui_pisteet(QWidget):
 
         self.setLayout(self.vbox)
         self.tulosta_tilanne()
+
+
         self.show()
 
     def tulosta_tilanne(self):
@@ -62,11 +64,17 @@ class Qui_pisteet(QWidget):
             piste.setAlignment(QtCore.Qt.AlignCenter)
             self.taulukko.addWidget(piste, x, 4)
 
-            piste = QLabel(str(pelaaja.getpata2()))
+            if pelaaja.getpata2() == False:
+                piste = QLabel("0")
+            else:
+                piste = QLabel("1")
             piste.setAlignment(QtCore.Qt.AlignCenter)
             self.taulukko.addWidget(piste, x, 5)
 
-            piste = QLabel(str(pelaaja.getruutu10()))
+            if pelaaja.getruutu10() == False:
+                piste = QLabel("0")
+            else:
+                piste = QLabel("1")
             piste.setAlignment(QtCore.Qt.AlignCenter)
             self.taulukko.addWidget(piste, x, 6)
 
@@ -88,9 +96,11 @@ class Qui_pisteet(QWidget):
                     johtaja = pelaaja
                 elif pelaaja.getpisteet() == suurin:
                     lista.append(pelaaja)
-            if suurin > 15 and len(lista) ==0:  #onko voittajaa vai ei
+            if suurin > 15 and len(lista) ==1:  #onko voittajaa vai ei
                 teksti2 = "Pelaaja {} voitti, pisteitä on {}".format(johtaja.return_name(), suurin)
                 voittaja = QLabel(teksti2)
+
+                #self.setStyleSheet("background: green")
             elif len(lista) ==1:
                 teksti2 ="Pelaaja {} johtaa, pisteitä on {}".format(johtaja.return_name(), suurin)
                 voittaja = QLabel(teksti2)

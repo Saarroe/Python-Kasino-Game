@@ -3,23 +3,20 @@ Matias
 Niko
 #kortit pakassa:
 #kortit poydalla:
-Hertta 8
-Risti 10
 Hertta 6
 Pata 7
-Pata 4
-Hertta 5
+Risti 9
+Pata 8
+Hertta 14
+Hertta 10
 #pelin tiedot:
 1
 #pelaajien tiedot
-# Matias 4
-Risti 9
-Hertta 13
-Hertta 14
+# Matias 1
 Ruutu 3
 0
 True
-18
+21
 1
 7
 1
@@ -27,16 +24,13 @@ False pata2
 True ruutu10
 False onko vuoro p‰‰ttynyt
 False onko saanut kortteja viimeksi
-# Niko 4
-Pata 8
-Ruutu 14
-Hertta 10
+# Niko 1
 Hertta 11
 0
 False
-20
-1
-3
+23
+2
+4
 3
 True pata2
 False ruutu10

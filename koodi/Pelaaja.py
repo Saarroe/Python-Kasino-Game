@@ -132,7 +132,6 @@ class Player():
         return self.kasi
 
     def pelaa_kortti(self,kortti):
-
         self.kasi.remove(kortti)
 
     def return_name(self):

@@ -39,7 +39,6 @@ class GUI_aloitus(QMainWindow):
         self.pisteet.triggered.connect(lambda: self.pistetaulukko())
         self.pisteMenu.addAction(self.pisteet)
 
-
         self.tallennus = QAction('&Tallennetaan peli')
         self.tallennus.triggered.connect(lambda: self.save_game())
         self.saveMenu.addAction(self.tallennus)
@@ -68,7 +67,6 @@ class GUI_aloitus(QMainWindow):
 
     def pistetaulukko(self):
         if self.peli != None:
-
             self.piste = Qui_pisteet(self.peli, False)
 
         else:
@@ -99,8 +97,11 @@ class GUI_aloitus(QMainWindow):
             for pelaaja in self.peli.return_pelaajat():
                 if str(text) == pelaaja.return_name():
                     return False
+        if text[0] == '#':
+            return False
         if len(text)>10:
-            text = text[0:10]
+
+            text = text[0:15]
         self.peli.lisaa_pelaaja(str(text))
         self.statusBar().showMessage("Pelaaja {} lisättiin onnistuneesti".format(text))
         return True
@@ -143,9 +144,7 @@ class GUI_aloitus(QMainWindow):
         self.scene.setSceneRect(0,0,650,750)
 
         self.view = QtWidgets.QGraphicsView(self.scene, self)
-        self.view.setStyleSheet("background-image: url(kuvat/board.jpg); border: transparent")
-
-        #self.view.adjustSize()
+        self.view.setStyleSheet("background-image: url(kuvat/board.jpg)")
 
         self.vbox.addWidget(self.view)
         #luodaan siirtoja varten
@@ -286,7 +285,23 @@ class GUI_aloitus(QMainWindow):
                 self.pistetaul = Qui_pisteet(self.peli,True)
 
                 if suurin > 15:
-                    QMessageBox.information(self, "Peli päättyi", "Onnittelut voittajalle. Lopeta peli")
+                    print("x")
+                    self.pakkalaskuri.hide()
+                    self.nextbutton.hide()
+                    self.showbutton.hide()
+                    self.takebutton.hide()
+                    self.putcardbutton.hide()
+                    self.nimi.hide()
+                    self.viiva.hide()
+
+                    uusi = QLabel("  Peli päättyi\n  Onnea voittajalle!")
+
+                    uusi.setFont(QtGui.QFont("Times", 30))
+
+                    self.view.setStyleSheet("background-image: url(kuvat/voitto.jpg)")
+
+                    self.scene.addWidget(uusi)
+
                 else:
                     if self.uusikierros is None:
                         self.uusikierros = QPushButton("Aloita uusi kierros", self)
@@ -566,7 +581,7 @@ class GUI_aloitus(QMainWindow):
         self.setGeometry(0, 0, 1300, 900)
         self.setWindowTitle("Kasino")
         self.init_buttons()
-        self.setStyleSheet("background-image: url(kuvat/tausta.jpg)")
+        self.setStyleSheet("background-image: url(kuvat/tausta2.jpg)")
         self.show()
 
     def save_game(self):  #tallentaa pelin tiedot

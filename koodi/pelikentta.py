@@ -92,12 +92,8 @@ class Pelikentta():
 
             summa1 += arvo
 
-
         if summa1%arvo2 == 0:  #kun jakojäännös 0 niin menee oikein
             return True
-        elif summa1 >arvo2:
-            pass
-
         else:
             return False
 
@@ -175,8 +171,7 @@ class Pelikentta():
             if padat > suurin:
                 suurin = padat
                 haluttu = pelaaja
-            elif padat == suurin:
-                haluttu = None
+
         if haluttu != None:
             haluttu.lisaapiste()
             haluttu.lisaapiste()

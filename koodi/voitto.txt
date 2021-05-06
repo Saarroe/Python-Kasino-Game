@@ -1,0 +1,73 @@
+#pelaajat pelissa:
+Mikko
+Markus
+suppilovahvero
+karhu
+T‰htinen
+#kortit pakassa:
+#kortit poydalla:
+Hertta 11
+Pata 10
+Hertta 4
+Hertta 10
+Pata 13
+#pelin tiedot:
+1
+#pelaajien tiedot
+# Mikko 0
+0
+False
+8
+0
+2
+0
+False pata2
+False ruutu10
+False onko vuoro p‰‰ttynyt
+True onko saanut kortteja viimeksi
+# Markus 0
+0
+True
+2
+0
+0
+0
+False pata2
+False ruutu10
+True onko vuoro p‰‰ttynyt
+False onko saanut kortteja viimeksi
+# suppilovahvero 1
+Ruutu 4
+10
+False
+24
+4
+5
+0
+False pata2
+True ruutu10
+False onko vuoro p‰‰ttynyt
+False onko saanut kortteja viimeksi
+# karhu 1
+Ruutu 9
+0
+False
+4
+0
+1
+0
+False pata2
+False ruutu10
+False onko vuoro p‰‰ttynyt
+False onko saanut kortteja viimeksi
+# T‰htinen 0
+1
+False
+7
+0
+3
+0
+True pata2
+False ruutu10
+False onko vuoro p‰‰ttynyt
+False onko saanut kortteja viimeksi

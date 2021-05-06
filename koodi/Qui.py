@@ -162,7 +162,7 @@ class GUI_aloitus(QMainWindow):
         teksti=pelaaja.return_name()
 
         self.nimi = QLabel(teksti)
-        #self.nimi.setStyleSheet("background-image: url(kuvat/board.jpg); font-size 50px")
+
         self.nimi.setStyleSheet("background: green")
         self.nimi.setFixedWidth(200)
         self.nimi.setFixedHeight(30)
@@ -285,7 +285,7 @@ class GUI_aloitus(QMainWindow):
                 self.pistetaul = Qui_pisteet(self.peli,True)
 
                 if suurin > 15:
-                    print("x")
+
                     self.pakkalaskuri.hide()
                     self.nextbutton.hide()
                     self.showbutton.hide()
@@ -324,11 +324,9 @@ class GUI_aloitus(QMainWindow):
         x=0
 
         for pelaaja in self.peli.return_pelaajat(): #Pelaajien tietojen lopetus
-
             if pelaaja.getjakaja() is True:
                 pelaaja.setjakajafalse()
                 turn = x
-
             pelaaja.nollaatiedot()
             x+=1
 
@@ -336,16 +334,15 @@ class GUI_aloitus(QMainWindow):
         pelaajat[turn+1].setjakajatrue()
 
         self.peli.nollaapelitiedot()
-
         self.peli.asetavuoro(turn+1)  #asettaa seuraavan pelaajan jakajaksi
 
         self.peli.nollaakorttiqui() # luodaan siten täysin uudet quicardit
 
         self.peli.aloita_peli()
-
+        self.pakkakuva.show()
         self.updatequi()
         self.timer.start()
-    def takecard(self):  #Käy läpi uusiksi rauhassa
+    def takecard(self):
 
         vara = []
         quip = []
@@ -541,6 +538,7 @@ class GUI_aloitus(QMainWindow):
                 qkortti.move(-25 + 150 * x, 490)
         self.nimi.setText(pelaaja.return_name())
         if len(self.peli.pakka.getkortit()) > 0:
+            self.pakkalaskuri.show()
             self.pakkalaskuri.setText("kortit: {}".format(str(len(self.peli.pakka.getkortit()))))
             self.pakkalaskuri.adjustSize()
         else:

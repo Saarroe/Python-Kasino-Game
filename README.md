@@ -1,20 +1,19 @@
-1)
-Projektiin on lisätty suurin osa keskeisistä luokista sekä metodeista. 
-Projektiin on tehty ominaisuudet, mitkä mahdollistavat korttipakan teon
-ja sekoittamisen, pelaajien lisäämisen sekä pelin aloittamisen eli korttien jaon.
-Näille ominaisuuksille on tehty myös unittestit. Käyttöliittymän teko aloitettu.
+Kasino y2 2021
+Tekijä: Eero Saarro
 
-2)
-Ohjelmaa voi ajaa ajamalla Main tiedostoa. Ohjelmassa aukee graafinen käyttö-
-liittymä, jossa aloittamalla uuden pelin voi lisätä haluamansa määrän pelaajia.
-Jonka jälkeen peli jakaa kortit, mikä ei näy vielä graafisessa käyttöliittymässä
+Ohessa on keväällä 2021 y2 ohjelmointikurssilla tekemäni pakkakasino-peli
+graafisena versiona. 
 
-3)
-Olen käyttänyt projektiin alle 10tuntia, josta suurin osa on mennyt graafisen 
-käyttöliittymän tekemiseen sekä sen käytön harjoitteluun. Edennyt suunnitelman
-aikataulun mukaan.
+Projektista löytyy Documents kansiosta projektin dokumentti sekä suunnitelma.
+Koodi kansiosta löytyy itse kooditiedostot (.py) sekä tallennustiedostot, jotka
+ovat muotoa .txt. Koodi kansion sisällä on myös kuvat kansio, jossa on kaikki 
+kuvat, jotka ovat .jpg muodossa sekä musiikki kansio, jossa on yksi .mp3 
+tiedosto.
 
-4)
-Suuria ongelmia ei ole ilmennyt. Tällä hetkellä haasteena on saada kortit 
-lisättyä pöydälle sopivassa muodossa ja näihin liittyvät kuvat liitettyä.
-Muuten kaikki edennyt pitkälti suunnitelman mukaan. 
+Ohjelman ajamista varten täytyy asentaa PyQt5 kirjasto.
+
+Ohjelmaa ajetaan ajamalla "main.py" tiedostoa. 
+Myös tiedostoa "Testit.py" voi ajaa, jos haluaa katsoa, meneekö unittestit
+läpi.
+
+  

@@ -21,7 +21,6 @@ class GUI_aloitus(QMainWindow):
         self.exitAct = QAction('&Lopetetaan peli', self)
         self.exitAct.triggered.connect(self.close)
 
-        self.statusBar()
         self.statusBar().setStyleSheet("Background: orange")
         self.statusBar().showMessage("Tervetuloa pelaamaan kasinoa")
 
@@ -118,16 +117,13 @@ class GUI_aloitus(QMainWindow):
             else:
                 QMessageBox.information(self, "Väärä nimi", "Pelaaja on jo pelissä\ntai\nPainoit cancel")
 
-
         self.start_button.hide()  #Piilotetaan buttonit ja lisätään uusi näyttö
         self.load_button.hide()
         self.newGui()
 
-
         self.peli.aloita_peli()
         pelaajat = self.peli.return_pelaajat()
         pelaajat[0].setjakajatrue()
-
 
         self.updatequi()# Pelaajat lisätty 2-8PLR, jaetaan kortit
 
@@ -150,9 +146,6 @@ class GUI_aloitus(QMainWindow):
         #luodaan siirtoja varten
 
         self.newbuttons()#pelin napit: seuraava vuoro, nayta kortit, talenna
-
-
-
 
         self.scene.addWidget(self.putcardbutton)
         self.scene.addWidget(self.takebutton)
@@ -311,7 +304,6 @@ class GUI_aloitus(QMainWindow):
                     else:
                         self.uusikierros.show()
 
-
         else:
             self.statusBar().showMessage("Tee ensiksi siirto: Ota halutut kortit tai laita kortti pöytään")
             self.timer.start()
@@ -354,7 +346,6 @@ class GUI_aloitus(QMainWindow):
                 if qkortti.getklikattu() == 1:
                     kasiq = qkortti
 
-
             for qkortti in self.peli.getqkortit_poyta():
                 if qkortti.getklikattu() == 1:
                     uusi = qkortti.getkortti()
@@ -394,7 +385,6 @@ class GUI_aloitus(QMainWindow):
                             pelaaja.lisaaruutu10()
                         if kortti.get_maa() == "Pata":
                             pelaaja.lisaapata()
-
 
                     kasiq.setklikattu0()
                     pelaaja.poistaqkortti(kasiq)
@@ -560,8 +550,6 @@ class GUI_aloitus(QMainWindow):
         self.start_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.vbox.addWidget(self.start_button)
 
-
-
         self.load_button = QPushButton("Lataa peli", self)
         self.load_button.setStyleSheet("color: black; background: transparent; border-radius: 15px solid black; "
                                        "font-size: 36px")
@@ -572,9 +560,7 @@ class GUI_aloitus(QMainWindow):
         self.horizontal.addWidget(self.load_button)
         self.vbox.addWidget(self.load_button)
 
-
     def _init_window(self): #alkunäyttö
-
 
         self.horizontal = QtWidgets.QHBoxLayout()  #horizontal ja vertical layout
         self.vbox = QtWidgets.QVBoxLayout()
@@ -623,13 +609,11 @@ class GUI_aloitus(QMainWindow):
                     tiedosto.write("{} onko vuoro päättynyt\n".format(pelaaja.getpelattu()))  #onko vuoro päättynyt
                     tiedosto.write("{} onko saanut kortteja viimeksi\n".format(pelaaja.getvika()))
                     #onko saanut vikana kortteja
-
                 tiedosto.close()
                 QMessageBox.information(self, "Tallennus", "Peli tallennettu tiedostoon {}.txt".format(teksti))
 
             else:
                 QMessageBox.information(self, "Tallennus", "Tallennus tiedoston nimi ei kelpaa\ntai painoit cancel")
-
 
     def load_game(self):
         text, ok = QInputDialog.getText(self, "Lataaminen", "Anna ladattavan tiedoston nimi:")
@@ -768,7 +752,7 @@ class GUI_aloitus(QMainWindow):
                 self.timer = QtCore.QTimer()  # jotta ei tarvitse päivittää käyttöliittymää klikkauksille
                 self.timer.timeout.connect(lambda: self.timerklikkaus())
                 self.timer.start(100)
-
+                tiedosto.close()
             except OSError:  #ei tiedostoa
                 QMessageBox.warning(self, "Väärä tiedosto", "Tiedoston nimellä {}.txt \n ei löytynyt tallennettua"
                                                             "peliä".format(teksti))

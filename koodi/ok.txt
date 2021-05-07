@@ -1,38 +1,33 @@
 #pelaajat pelissa:
-Matias
-Niko
+Eero
+Saarro
 #kortit pakassa:
 #kortit poydalla:
-Hertta 6
-Pata 7
-Risti 9
-Pata 8
-Hertta 14
-Hertta 10
+Risti 12
 #pelin tiedot:
-1
+0
 #pelaajien tiedot
-# Matias 1
-Ruutu 3
+# Eero 1
+Hertta 12
 0
 True
-21
+24
+2
+8
 1
-7
-1
-False pata2
+True pata2
 True ruutu10
 False onko vuoro p‰‰ttynyt
-False onko saanut kortteja viimeksi
-# Niko 1
-Hertta 11
+True onko saanut kortteja viimeksi
+# Saarro 1
+Risti 13
 0
 False
-23
+25
 2
-4
-3
-True pata2
+5
+1
+False pata2
 False ruutu10
-True onko vuoro p‰‰ttynyt
-True onko saanut kortteja viimeksi
+False onko vuoro p‰‰ttynyt
+False onko saanut kortteja viimeksi

@@ -6,7 +6,6 @@ class Korttipakka():
     def __init__(self, x):  #x on true jos eka init
         self.kortit=[]
         self.eka = x
-
         self.set_kortit()
 
     def sekoita(self):

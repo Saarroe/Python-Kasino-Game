@@ -10,9 +10,6 @@ class Kortti():
         self.arvo = arvo
         self.onkoqui = False
 
-
-
-
     def set_maa(self, maa):
         if maa in [Kortti.Ruutu, Kortti.Pata, Kortti.Risti, Kortti.Hertta]:
             self._maa = maa
@@ -28,5 +25,6 @@ class Kortti():
 
     def set_guifalse(self):
         self.onkoqui = False
+
     def get_qui(self):
         return self.onkoqui

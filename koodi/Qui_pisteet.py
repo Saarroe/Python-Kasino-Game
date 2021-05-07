@@ -16,11 +16,8 @@ class Qui_pisteet(QWidget):
         self.setWindowTitle("Pistetaulukko")
         self.vbox = QtWidgets.QVBoxLayout()
         self.setGeometry(400,200,800,700)
-
         self.setLayout(self.vbox)
         self.tulosta_tilanne()
-
-
         self.show()
 
     def tulosta_tilanne(self):
@@ -41,7 +38,6 @@ class Qui_pisteet(QWidget):
 
         self.taulukko.addWidget(piste, 0, 7)  #Edellisiltä kierroksilta
         x=1
-
         for pelaaja in pelaajat:
             teksti="{}:".format(pelaaja.return_name())
             piste = QLabel(teksti)
@@ -100,7 +96,6 @@ class Qui_pisteet(QWidget):
                 teksti2 = "Pelaaja {} voitti, pisteitä on {}".format(johtaja.return_name(), suurin)
                 voittaja = QLabel(teksti2)
 
-                #self.setStyleSheet("background: green")
             elif len(lista) ==1:
                 teksti2 ="Pelaaja {} johtaa, pisteitä on {}".format(johtaja.return_name(), suurin)
                 voittaja = QLabel(teksti2)

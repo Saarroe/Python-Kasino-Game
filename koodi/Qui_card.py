@@ -9,8 +9,6 @@ class Qui_card(QLabel):
 
     def __init__(self, kortti, peli):
         super(Qui_card, self).__init__()
-
-
         self.klikattu = 0 # jos klikattu arvo on 1
         self.card_back = QPixmap("kuvat/purple_back.jpg")
         self.kortti = kortti
@@ -25,7 +23,6 @@ class Qui_card(QLabel):
 
     def getkortti(self):
         return self.kortti
-
 
     def setklikattu1(self):
         self.klikattu = 1

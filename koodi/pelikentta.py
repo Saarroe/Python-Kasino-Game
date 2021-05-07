@@ -154,35 +154,26 @@ class Pelikentta():
         else:
             return False
 
-
-
-
-
     def seuraava_vuoro(self):
         if self.turn == len(self.pelaajaa_lista)-1:
             self.turn = 0
         else:
             self.turn += 1
 
-
     def pelaa_kortin_poytaan(self, kortti):
 
         pelaaja = self.pelaajaa_lista[self.turn]
         pelaaja.pelaa_kortti(kortti)
         self.poyta.append(kortti)
-
         if len(self.pakka.getkortit()) == 0:
             pass
-
         else:
             kortti = self.pakka.nosta_kortti()
             pelaaja.lisaa_kortti_kateen(kortti)
 
-
     def klikkaus(self,qkortti):
         pelaaja = self.get_turn_pelaaja()
         qkorttikasi = pelaaja.getqkortit_kasi()
-
 
         if qkortti.getvisibility() is True and pelaaja.getpelattu() == False:
             if qkortti in self.qkortit_poyta:  #True jos kortti pöydässä, kädessä False
@@ -195,10 +186,8 @@ class Pelikentta():
 
             else:
                 if qkortti.getklikattu() == 1:
-
                     for kortti in pelaaja.getqkortit_kasi():
                         kortti.setklikattu0()
-
                 else:
 
                     for kortti in pelaaja.getqkortit_kasi():
@@ -212,13 +201,11 @@ class Pelikentta():
         haluttu = None
         for pelaaja in self.pelaajaa_lista:
             korttimaara = pelaaja.getkortit()
-
             if korttimaara > suurin:
                 suurin= korttimaara
                 haluttu = pelaaja
             elif korttimaara == suurin:
                 haluttu = None
-
         if haluttu != None:
             haluttu.lisaapiste()
 
@@ -230,7 +217,6 @@ class Pelikentta():
             if padat > suurin:
                 suurin = padat
                 haluttu = pelaaja
-
         if haluttu != None:
             haluttu.lisaapiste()
             haluttu.lisaapiste()
@@ -238,12 +224,9 @@ class Pelikentta():
     def muutpisteet(self):
 
         for pelaaja in self.pelaajaa_lista:
-
             for piste in range(pelaaja.getassat()):  # pisteet ässistä
-
                 pelaaja.lisaapiste()
             for piste in range(pelaaja.getmokit()):  # Pisteet mökeistä
-
                 pelaaja.lisaapiste()
 
             if pelaaja.getpata2() is True:  # Piste pata2
@@ -254,8 +237,6 @@ class Pelikentta():
             else:
                 pass
 
-
-
     def laskepisteet(self):
 
         self.enitenkortteja()
@@ -264,13 +245,9 @@ class Pelikentta():
 
     def nollaapelitiedot(self):
         self.pakka = Korttipakka(True)
-
         self.turn = 0  # kenen vuoro
-
         self.poyta = []
-
         self.qkortit_poyta = []
-
 
     def nollaakorttiqui(self):
         for kortti in self.pakka.getkortit():

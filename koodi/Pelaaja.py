@@ -115,8 +115,10 @@ class Player():
 
     def lisaakortit(self, x):
         self.saadut_kortit = x
+
     def lisaaassat(self, x):
         self.assat = x
+
     def lisaapadat(self,x):
         self.padat = x
     def lisaamokit(self, x):

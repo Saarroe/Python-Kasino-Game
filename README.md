@@ -1,19 +1,8 @@
-Kasino y2 2021
-Tekijä: Eero Saarro
+This repository contains a Kasino card game created during the spring of 2021 for the programming course Y2.
 
-Ohessa on keväällä 2021 y2 ohjelmointikurssilla tekemäni pakkakasino-peli
-graafisena versiona. 
+The project includes a 'Documents' folder containing the project documentantion and the plan. The 'Code' folder contains the Python code files (.py) and storage files in .txt format. Within the 'Code' folder, you'll also find an 'Images' directory with all images in .jpg format, and a 'Music' folder containing .mp3 file.
 
-Projektista löytyy Documents kansiosta projektin dokumentti sekä suunnitelma.
-Koodi kansiosta löytyy itse kooditiedostot (.py) sekä tallennustiedostot, jotka
-ovat muotoa .txt. Koodi kansion sisällä on myös kuvat kansio, jossa on kaikki 
-kuvat, jotka ovat .jpg muodossa sekä musiikki kansio, jossa on yksi .mp3 
-tiedosto.
+To run the program, you'll need to install the PyQt5 library. Execute the 'main.py' file to run the program. Additionally, running the 'Tests.py' file will execute unit tests."
 
-Ohjelman ajamista varten täytyy asentaa PyQt5 kirjasto.
-
-Ohjelmaa ajetaan ajamalla "main.py" tiedostoa. 
-Myös tiedostoa "Testit.py" voi ajaa, jos haluaa katsoa, meneekö unittestit
-läpi.
 
   
